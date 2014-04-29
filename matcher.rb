@@ -112,6 +112,8 @@ end
 
 class Matcher
 
+	attr_accessor :simularity;
+
 	def initialize(token_array1, token_array2)
 		@token_arrays = [];
 		@token_arrays += [token_array1];
@@ -236,12 +238,14 @@ class Matcher
 
 			begin_index = denied_pairs.bsearch_upper_boundary {|x| x <=> pair_to_decide}
 
-			to_be_considered = check_prefix_tree(curr_den_tree, denied_pairs, sum, begin_index);
+			to_be_considered = true;
+			to_be_considered = check_prefix_tree(curr_den_tree, denied_pairs, sum, begin_index)# if pair_to_decide < 15;
 
 			# p to_be_considered if pair_to_decide == 1;
 			# p denied_pairs     if pair_to_decide == 1;
 			# p begin_index      if pair_to_decide == 1;
-
+			@count +=1;
+			p @count if @count % 1000 == 0;
 			if not to_be_considered then
 				return;
 			end
@@ -274,12 +278,16 @@ class Matcher
 			set_of_pairs   = (range).map{|x| x};
 			accepted_pairs = [];
 			denied_pairs   = [];
+			@count = 0;
 			generate_combinations(set_of_pairs, accepted_pairs, denied_pairs, 0);
 			i+=1;
 		end
+
+		p "max_combination: "
 		p @max_combination;
 		res = []
-		@max_combination.each{|x| res += x[0]}
+		@simularity = 0;
+		@max_combination.each{|x| res += x[0]; @simularity += x[1]}
 		p res
 		return res
 	end
