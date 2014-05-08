@@ -13,6 +13,8 @@ def check_prefix_tree(tree, list, sum, start)
 	is_in_tree = true;
 	search_mod = true;
 	
+	# Добавить обработку варианта с меньшим достигнутым списком в дереве.
+
 	# Варианты действий при обходе дерева
 	# Режим поиска:
 	# 	 1. Конец дерева не достигнут, конец списка не достигнут.
@@ -118,22 +120,7 @@ class Matcher
 		@token_arrays = [];
 		@token_arrays += [token_array1];
 		@token_arrays += [token_array2];
-	end
 
-	# Delete tokens, wich marked as insignificant + reorded arrays by size
-	def erase_insignificant_tokens
-		k = 0;
-		while k < @token_arrays.size do
-			i = 0;
-			while i < @token_arrays[k].size do
-				if @token_arrays[k][i].necessary == false then
-					 @token_arrays[k].delete_at(i);
-					 i -=1;
-				end
-				i+=1;
-			end
-			k+=1;
-		end
 
 		@min_size_array        = @token_arrays[0].size > @token_arrays[1].size ? @token_arrays[1] : @token_arrays[0];
 		@max_size_array        = @token_arrays[0].size > @token_arrays[1].size ? @token_arrays[0] : @token_arrays[1];
@@ -141,12 +128,7 @@ class Matcher
 		@min_size_array_index  = @token_arrays[0].size > @token_arrays[1].size ? 1 : 0;
 		@max_size_array_index  = @token_arrays[0].size > @token_arrays[1].size ? 0 : 1;
 
-		# p "min array:"
-		# p @min_size_array
-		# p @min_size_array.size
-		# p "max array:"
-		# p @max_size_array
-		# p @max_size_array.size
+
 	end
 
 	# Generate all pairs of comparable tokens with it`s simularity in @pairs
@@ -165,6 +147,7 @@ class Matcher
 			i+=1;
 		end
 	end
+
 
 	#for all pair I, generate list of numbers of pairs J > I, intersected by pair I
 	def get_intersection()

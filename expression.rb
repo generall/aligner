@@ -6,12 +6,12 @@ class Expression
 	def initialize(string_expr)
 		regexp_array = [];
 
-		string_regexp = [/^"(\\.|[^"])*"/   ,1, true , 0.1];
-		quote1_regexp = [/^'(\\.|[^'])*'/   ,2, true , 0.1];
-		regexp_regexp = [/^\/(\\.|[^\/])*\//,3, true , 0.2];
-		var_regexp    = [/^[[:word:]]+/     ,4, true , 0.1];
-		spchar_regexp = [/^[^\w\s]/         ,5, true , 0  ];
-		space_regexp  = [/^\s/              ,6, false, 0  ];
+		quote1_regexp = [/^'(\\.|[^'])*'/   , 2       , true , 0.1];
+		string_regexp = [/^"(\\.|[^"])*"/   , 1       , true , 0.1];
+		regexp_regexp = [/^\/(\\.|[^\/])*\//, 3       , true , 0.2];
+		var_regexp    = [/^[[:word:]]+/     , :id     , true , 0.1];
+		spchar_regexp = [/^[^\w\s]/         , :spchar , true , 0  ];
+		space_regexp  = [/^\s/              , 6       , false, 0  ];
 
 
 		regexp_array += [string_regexp]
@@ -39,7 +39,18 @@ class Expression
 			end
 			do_parse = is_cmp;
 		end
+	end
 
+	# Delete tokens, wich marked as insignificant + reorded arrays by size
+	def erase_insignificant_tokens
+		i = 0;
+		while i < @tokens.size do
+			if @tokens[i].necessary == false then
+				@tokens.delete_at(i);
+				i -=1;
+			end
+			i+=1;
+		end
 	end
 end
 
