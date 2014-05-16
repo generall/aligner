@@ -11,10 +11,11 @@ def levenshtein(first, second)
 			if first[j-1] == second[i-1]
 				matrix[i][j] = matrix[i-1][j-1]
 			else
-				matrix[i][j] = [
-				matrix[i-1][j],
-				matrix[i][j-1],
-				matrix[i-1][j-1],
+				matrix[i][j] =
+				[
+					matrix[i-1][j  ],
+					matrix[i  ][j-1],
+					matrix[i-1][j-1],
 				].min + 1
 			end
 		end
@@ -25,9 +26,9 @@ end
 class Token
 	attr_accessor :type, :value, :min_simularity, :necessary
 	def initialize(value, type, necessary, min_simularity)
-		@type = type;
-		@value = value;
-		@necessary = necessary;
+		@type           = type;
+		@value          = value;
+		@necessary      = necessary;
 		@min_simularity = min_simularity;
 	end
 	def cmp(other_token)
@@ -38,6 +39,12 @@ class Token
 			return 1.0 - levenshtein(@value, other_token.value).to_f / max_len + other_token.min_simularity;
 		end
 	end
+
+	def to_s()
+		return "|"+@value.to_s+"|"
+		#return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
+	end
+
 end
 
 class TokenTemplate
@@ -46,6 +53,18 @@ class TokenTemplate
 	def initialize(type = :any, value = :any)
 		@type = type;
 		@value = value;
+	end
+
+	def ==(other_token)
+		if other_token.class == TokenTemplate then
+			return equal? other_token;
+		else
+			return cmp(other_token);
+		end
+	end
+
+	def to_s()
+		return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
 	end
 
 	def cmp(other_token)

@@ -1,6 +1,6 @@
 class FSM
 
-	attr_accessor :vertex_set, :current_vertex
+	attr_accessor :vertex_set, :current_vertex, :values
 
 	def initialize()
 		@vertex_set     = {} ;
@@ -19,8 +19,9 @@ class FSM
 		@values[vertex] = value;
 	end
 
-	def get_value()
-		return @values[@current_vertex]
+	def get_value(vertex = false)
+		vertex = vertex == false ? @current_vertex : vertex;
+		return @values[vertex]
 	end
 
 
@@ -38,6 +39,10 @@ class FSM
 		else
 			return false;
 		end
+	end
+
+	def get_accepted_signals()
+		return @vertex_set[@current_vertex].keys;
 	end
 
 	def submit_signal(signal)

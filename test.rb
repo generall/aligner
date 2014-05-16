@@ -1,7 +1,9 @@
 require "./matcher.rb"
 
- input_string1 = "p check_prefix_tree(t, [1,3], 2, 2 + 3)";
- input_string2 = "@tokens += [Token.new(res[0], regexp[1], regexp[2], regexp[3])]";
+
+
+input_string1 = "p check_prefix_tree(t, [1,3], 2, 2 + 3)";
+input_string2 = "@tokens += [Token.new(res[0], regexp[1], regexp[2], regexp[3])]";
 
 
 e1 = Expression.new(input_string1);
