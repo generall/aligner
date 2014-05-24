@@ -1,4 +1,34 @@
 
+class MetaExpression
+	attr_accessor :value, :parent
+
+	def initialize(parent = nil)
+		@parent = parent;
+		@value  = [];
+	end
+
+	def cmp(token_or_metaexpression)
+		if token_or_metaexpression.class == Token then
+			return 0;
+		else
+			#
+			# Matcher here.
+			return 1;
+		end
+	end
+
+	def print_tree(n = 0)
+		@value.each do |token|
+			if token.class == Token then
+				print " "*n*4;
+				p token.value;
+			else
+				token.print_tree(n+1)
+			end
+		end
+	end
+end
+
 class Expression
 
 	attr_accessor :tokens
@@ -6,16 +36,20 @@ class Expression
 	def initialize(string_expr)
 		regexp_array = [];
 
-		quote1_regexp = [/^'(\\.|[^'])*'/   , 2       , true , 0.1];
-		string_regexp = [/^"(\\.|[^"])*"/   , 1       , true , 0.1];
-		regexp_regexp = [/^\/(\\.|[^\/])*\//, 3       , true , 0.2];
+		quote1_regexp = [/^'(\\.|[^'])*'/   , :quote  , true , 0.1];
+		string_regexp = [/^"(\\.|[^"])*"/   , :quote  , true , 0.1];
+		regexp_regexp = [/^\/(\\.|[^\/])*\//, :regexp , true , 0.2];
+		lvar_regexp   = [/^\@[[:word:]]+/   , :id     , true , 0.1];
+		gvar_regexp   = [/^\@\@[[:word:]]+/ , :id     , true , 0.1];
 		var_regexp    = [/^[[:word:]]+/     , :id     , true , 0.1];
 		spchar_regexp = [/^[^\w\s]/         , :spchar , true , 0  ];
-		space_regexp  = [/^\s/              , 6       , false, 0  ];
+		space_regexp  = [/^\s/              , :space  , false, 0  ];
 
 
 		regexp_array += [string_regexp]
 		regexp_array += [quote1_regexp]
+		regexp_array += [lvar_regexp  ]
+		regexp_array += [gvar_regexp  ]
 		regexp_array += [var_regexp   ]
 		regexp_array += [spchar_regexp]
 		regexp_array += [regexp_regexp]
@@ -51,6 +85,10 @@ class Expression
 			end
 			i+=1;
 		end
+	end
+
+	def print_tokens()
+		@tokens.each_with_index{|x,i| p [i,x];}
 	end
 end
 

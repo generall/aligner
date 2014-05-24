@@ -41,25 +41,30 @@ class Token
 	end
 
 	def to_s()
-		return "|"+@value.to_s+"|"
+		return ""+@value.to_s+""
 		#return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
 	end
-
 end
+
 
 class TokenTemplate
 	attr_accessor :type, :value;
 
-	def initialize(type = :any, value = :any)
-		@type = type;
-		@value = value;
+	def initialize(type = :any, value = :any, except = [])
+		@type   = type;
+		@value  = value;
+		@except = except;
 	end
 
 	def ==(other_token)
 		if other_token.class == TokenTemplate then
 			return equal? other_token;
 		else
-			return cmp(other_token);
+			if other_token.class == Token then
+				return cmp(other_token);
+			else
+				return false 
+			end
 		end
 	end
 
@@ -68,12 +73,11 @@ class TokenTemplate
 	end
 
 	def cmp(other_token)
-		return true if @type == :any && other_token.type != :eof;
+		return !@except.include?(other_token.value) if @type == :any && other_token.type != :eof;
 		if @value == :any then
-			return @type == other_token.type;
+			return @type == other_token.type && !@except.include?(other_token.value);
 		else
-			return @type == other_token.type && @value == other_token.value;
+			return @type == other_token.type && @value.include?(other_token.value);
 		end 
-		return false;
 	end
 end
