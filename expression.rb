@@ -1,19 +1,20 @@
 
+
 class MetaExpression
-	attr_accessor :value, :parent
+	attr_accessor :value, :parent, :first;
 
 	def initialize(parent = nil)
 		@parent = parent;
-		@value  = [];
+		@value  = []    ;
+		@first  = nil   ;
 	end
 
-	def cmp(token_or_metaexpression)
-		if token_or_metaexpression.class == Token then
+
+	def cmp(token_or_meta)
+		if token_or_meta.class == Token then
 			return 0;
 		else
-			#
-			# Matcher here.
-			return 1;
+			return 0.1;
 		end
 	end
 
@@ -27,6 +28,24 @@ class MetaExpression
 			end
 		end
 	end
+
+	def separate_first
+		v = @value[0];
+		prev = nil;
+		while v.class != Token do
+			prev = v;
+			v = v.value[0];
+		end
+		first = v;
+		if prev != nil then
+			prev.value = prev.value[1..-1]
+			while prev.value == [] && prev != self do
+				prev = prev.parent
+				prev.value = prev.value[1..-1]
+			end
+		end		
+	end
+
 end
 
 class Expression
@@ -36,14 +55,15 @@ class Expression
 	def initialize(string_expr)
 		regexp_array = [];
 
-		quote1_regexp = [/^'(\\.|[^'])*'/   , :quote  , true , 0.1];
-		string_regexp = [/^"(\\.|[^"])*"/   , :quote  , true , 0.1];
-		regexp_regexp = [/^\/(\\.|[^\/])*\//, :regexp , true , 0.2];
-		lvar_regexp   = [/^\@[[:word:]]+/   , :id     , true , 0.1];
-		gvar_regexp   = [/^\@\@[[:word:]]+/ , :id     , true , 0.1];
-		var_regexp    = [/^[[:word:]]+/     , :id     , true , 0.1];
-		spchar_regexp = [/^[^\w\s]/         , :spchar , true , 0  ];
-		space_regexp  = [/^\s/              , :space  , false, 0  ];
+		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_spase>, <min_follow_space> ]
+		quote1_regexp = [/^'(\\.|[^'])*'/   , :quote  , true , 0.1, 0, 1];
+		string_regexp = [/^"(\\.|[^"])*"/   , :quote  , true , 0.1, 0, 1];
+		regexp_regexp = [/^\/(\\.|[^\/])*\//, :regexp , true , 0.2, 0, 1];
+		lvar_regexp   = [/^\@[[:word:]]+/   , :id     , true , 0.1, 0, 1];
+		gvar_regexp   = [/^\@\@[[:word:]]+/ , :id     , true , 0.1, 0, 1];
+		var_regexp    = [/^[[:word:]]+/     , :id     , true , 0.1, 0, 1];
+		spchar_regexp = [/^[^\w\s]/         , :spchar , true , 0  , 0, 1];
+		space_regexp  = [/^\s/              , :space  , false, 0  , 0, 1];
 
 
 		regexp_array += [string_regexp]
@@ -65,7 +85,7 @@ class Expression
 				res = regexp[0].match(string_expr);
 				if res != nil then
 					is_cmp = true;
-					@tokens += [Token.new(res[0], regexp[1], regexp[2], regexp[3])]
+					@tokens += [Token.new(res[0], regexp[1], regexp[2], regexp[3], regexp[4], regexp[5])]
 					size_of_token = res[0].size;
 					string_expr = string_expr[size_of_token..-1];
 					break;

@@ -4,6 +4,7 @@ require './expression.rb'
 
 @@Debug = true
 
+
 class Grammar
 
 	attr_accessor :rules, :rule_settings;
@@ -67,14 +68,19 @@ class Grammar
 
 end 
 
-
-
+@@grammar =Grammar.new
 #rules: [signal, [[nonterm, [term,term,...], index], [] , ... ] ]
+#vertex_by_set: number of vertex by rule
 def add_next_vertex(grammar, fsm, rules, vertex_by_set, curr_vertex)
 	signal = rules[0];
 	r      = rules[1];
-	#r = [[nonterm, [term,term,...], index], [] , ... ]
-	next_vertex = vertex_by_set[r]
+	vertex_index = [];
+	r.each do |rule|
+		vertex_index += [rule[0], [rule[1][0..rule[2]-1]]];
+	end
+
+	#r = [[nonterm, [term,term,...], index], [ ... ] , ... ]
+	next_vertex = vertex_by_set[vertex_index]
 	if next_vertex != nil then
 		# vertex exists
 		fsm.add_edge(signal, next_vertex, curr_vertex);
@@ -82,7 +88,7 @@ def add_next_vertex(grammar, fsm, rules, vertex_by_set, curr_vertex)
 		# vertex does not exist
 
 		index_new = fsm.vertex_set.size 
-		vertex_by_set[r] = index_new;
+		vertex_by_set[vertex_index] = index_new;
 
 		# get completed production rules
 		product = nil;
@@ -105,7 +111,6 @@ def add_next_vertex(grammar, fsm, rules, vertex_by_set, curr_vertex)
 			end
 			add_next_vertex(grammar, fsm, rule, vertex_by_set, index_new);
 		end
-
 	end
 end
 
@@ -134,6 +139,9 @@ def generate_FSM(grammar, axiom)
 		end
 		add_next_vertex(grammar, fsm, rule, vertex_by_set, 0);
 	end
+
+	vertex_by_set.each{|x| p x} if @@Debug;
+
 	return fsm;
 end
 
@@ -222,12 +230,13 @@ def parse(fsm, expr, grammar)
 		end
 
 		if @@Debug then
-			p "is_acceptable:   " + is_acceptable .to_s;
-			p "signal:          " + signal        .to_s;
-			p "expr.last:       " + expr.last     .to_s;
-			p "expr:            " + expr          .to_s;
-			p "state_stack:     " + state_stack   .to_s;
-			p "processed:       " + processed     .to_s;
+			p "is_acceptable:   " + is_acceptable     .to_s;
+			p "signal:          " + signal            .to_s;
+			p "expr.last:       " + expr.last         .to_s;
+			p "expr:            " + expr              .to_s;
+			p "state_stack:     " + state_stack       .to_s;
+			p "current_state    " + fsm.current_vertex.to_s;
+			p "processed:       " + processed         .to_s;
 		end
 		if is_acceptable then
 			# edge exists. Symbol accepted
@@ -288,61 +297,72 @@ def tree_to_metaexpression(tree, meta)
 	end
 end
 
-grammar =Grammar.new
+class LR_parser
+	def initialize()
+		load './grammar.rb'
+		@grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
+		@grammar_machina.set_current(0);
+
+		if @@Debug then
+			@grammar_machina.vertex_set.each{
+				|x| 
+				print x; print " --- ";
+				print @grammar_machina.get_value(x[0]);
+				print "\n"
+			} 
+
+			p "---"
+
+			@grammar_machina.get_accepted_signals.each{|x| p x}
+
+			print "\n\n\n"
+		end
+	end
+
+	def parse_meta(input_string)
+		
+		@grammar_machina.set_current(0);
+
+		e = Expression.new(input_string);
+		e.erase_insignificant_tokens
+		
+		expr = e.tokens.clone
+		expr += [Token.new(:eof, :eof, true, 0)]
+		
+		metaexpr = MetaExpression.new();
+		parse(@grammar_machina, expr, @@grammar).make_metaexpr(metaexpr);
+		
+		return metaexpr;
+	end
+end
 
 
-grammar.add_rule(:main, [:expr    ], [:reducible]);
-grammar.add_rule(:expr, [:expr, :p], [:reducible]);
-grammar.add_rule(:expr, [:p       ], [:reducible]);
+if @@Debug && false then
+	@@grammar.add_rule(:main, [:expr    ], [:reducible]);
+	@@grammar.add_rule(:expr, [:expr, :p], [:reducible]);
+	@@grammar.add_rule(:expr, [:p       ], [:reducible]);
 
-t1 = [:p, TokenTemplate.new(:spchar, ['=']), :expr]
-grammar.add_rule(:p, t1)
-grammar.add_rule(:p, [:t], [:reducible])
-
-
-bracket1 = [TokenTemplate.new(:spchar, ['(']), :expr, TokenTemplate.new(:spchar, [')'])]
-bracket2 = [TokenTemplate.new(:spchar, ['[']), :expr, TokenTemplate.new(:spchar, [']'])]
-bracket3 = [TokenTemplate.new(:spchar, ['{']), :expr, TokenTemplate.new(:spchar, ['}'])]
-grammar.add_rule(:t, bracket1);
-grammar.add_rule(:t, bracket2);
-grammar.add_rule(:t, bracket3);
-grammar.add_rule(:t, [TokenTemplate.new(:id                                   )], [:reducible]);
-grammar.add_rule(:t, [TokenTemplate.new(:quote                                )], [:reducible]);
-grammar.add_rule(:t, [TokenTemplate.new(:regexp                               )], [:reducible]);
-grammar.add_rule(:t, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')'])], [:reducible]);
-
-
-grammar_machina = generate_FSM(grammar, [:main, [:expr], 0]);
-
-grammar_machina.set_current(0);
-
-if @@Debug then
-	
+	open_bracket  = TokenTemplate.new(:spchar, ['(']);
+	close_bracket = TokenTemplate.new(:spchar, [')']);
+	b1 = [open_bracket, :expr, close_bracket]
+	b2 = [open_bracket       , close_bracket]
+	@@grammar.add_rule(:p, b1);
+	@@grammar.add_rule(:p, b2);
+	@@grammar.add_rule(:p, [TokenTemplate.new(:id                                       )], [:reducible]);
+	@@grammar.add_rule(:p, [TokenTemplate.new(:quote                                    )], [:reducible]);
+	@@grammar.add_rule(:p, [TokenTemplate.new(:regexp                                   )], [:reducible]);
+	@@grammar.add_rule(:p, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')','='])], [:reducible]);
+	grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
+	grammar_machina.set_current(0);
 	grammar_machina.vertex_set.each{
 		|x| 
 		print x; print " --- ";
 		print grammar_machina.get_value(x[0]);
-	 	print "\n"
+		print "\n"
 	} 
-	
+
 	p "---"
-	
 	grammar_machina.get_accepted_signals.each{|x| p x}
-	
 	print "\n\n\n"
-	
+
 end
-
-input_string1 = "f(a,b,[c d e f +])()";
-e1 = Expression.new(input_string1);
-e1.erase_insignificant_tokens
-
-expr = e1.tokens.clone
-expr += [Token.new(:eof, :eof, true, 0)]
-
-metaexpr = MetaExpression.new();
-
-parse(grammar_machina, expr, grammar).make_metaexpr(metaexpr);
-
-metaexpr.print_tree;
-

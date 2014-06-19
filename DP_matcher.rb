@@ -38,11 +38,11 @@ class DPMatcher
 		return max_value;
 	end
 
-	def get_pairs(x,y)
+	def get_pairs(x,y, start = 0)
 		@cache = {};
-		match(x,y,1,1);
+		match(x, y, start, start);
 		pairs = [];
-		i = j = 1;
+		i = j = start;
 		curr  = @cache[[i,j]][1]
 		while curr != 3
 			case curr
@@ -57,7 +57,7 @@ class DPMatcher
 			end
 			curr = @cache[[i,j]][1]
 		end
-		return [@cache[[1,1]][0], pairs];
+		return [@cache[[start, start]][0], pairs];
 	end
 end
 

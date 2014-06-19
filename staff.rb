@@ -24,14 +24,22 @@ def levenshtein(first, second)
 end
 
 class Token
-	attr_accessor :type, :value, :min_simularity, :necessary
-	def initialize(value, type, necessary, min_simularity)
-		@type           = type;
-		@value          = value;
-		@necessary      = necessary;
-		@min_simularity = min_simularity;
+	attr_accessor :type, :value, :min_simularity, :necessary, :min_follow_spase, :min_previous_spase;
+
+	def initialize(value, type, necessary, min_simularity, min_previous_spase, min_follow_spase)
+		@type               = type;
+		@value              = value;
+		@necessary          = necessary;
+		@min_simularity     = min_simularity;
+		@min_previous_spase = min_previous_spase;
+		@min_follow_spase   = min_follow_spase
 	end
+
 	def cmp(other_token)
+		if other_token.class != Token then
+			return 0
+		end
+
 		if(@type != other_token.type) then
 			return 0;
 		else
