@@ -69,6 +69,7 @@ class Grammar
 end 
 
 @@grammar =Grammar.new
+
 #rules: [signal, [[nonterm, [term,term,...], index], [] , ... ] ]
 #vertex_by_set: number of vertex by rule
 def add_next_vertex(grammar, fsm, rules, vertex_by_set, curr_vertex)
@@ -327,7 +328,7 @@ class LR_parser
 		e.erase_insignificant_tokens
 		
 		expr = e.tokens.clone
-		expr += [Token.new(:eof, :eof, true, 0)]
+		expr += [Token.new(:eof, :eof, true, 0, 0, 0)]
 		
 		metaexpr = MetaExpression.new();
 		parse(@grammar_machina, expr, @@grammar).make_metaexpr(metaexpr);

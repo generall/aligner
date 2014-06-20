@@ -13,6 +13,7 @@ e2.erase_insignificant_tokens
 
 
 e1.print_tokens()
+puts ""
 e2.print_tokens()
 
 p matcher.get_pairs(e1.tokens, e2.tokens)

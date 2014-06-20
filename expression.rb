@@ -29,21 +29,43 @@ class MetaExpression
 		end
 	end
 
-	def separate_first
+	def separate_first!
 		v = @value[0];
 		prev = nil;
 		while v.class != Token do
 			prev = v;
 			v = v.value[0];
 		end
-		first = v;
+		@first = v;
 		if prev != nil then
 			prev.value = prev.value[1..-1]
 			while prev.value == [] && prev != self do
 				prev = prev.parent
 				prev.value = prev.value[1..-1]
 			end
+		else
+			@value = @value[1..-1]
 		end		
+	end
+
+	def get_last_token()
+		if @value.last.class == MetaExpression then
+			return @value.last.get_last_token
+		else
+			return @value.last
+		end
+	end
+
+	def get_first_token()
+		if @value.first.class == MetaExpression then
+			return @value.first.get_first_token
+		else
+			return @value.first
+		end
+	end
+
+	def to_s
+		return value.to_s
 	end
 
 end

@@ -1,3 +1,6 @@
+require "./expression.rb"
+
+
 class DPMatcher
 	def initialize()
 		@cache = {};
@@ -58,6 +61,51 @@ class DPMatcher
 			curr = @cache[[i,j]][1]
 		end
 		return [@cache[[start, start]][0], pairs];
+	end
+
+	def generate_pairs(values1, values2)
+		pairs = get_pairs(values1, values2)[1]
+		for i in 0..pairs.size-1 do
+			if values1[pairs[i][0]].class == MetaExpression && values2[pairs[i][1]].class == MetaExpression then
+				pairs[i] += [generate_pairs(values1[pairs[i][0]].value, values2[pairs[i][1]].value)];
+			end
+		end
+		return pairs
+	end
+
+	# Filter pairs in 3-lines
+	# input: recursive pair array * 2
+	# output: [new_pair_array1, new_pair_array2]
+	def reconsider_pairs(pairs1, pairs2)
+		out_pairs1 = [];
+		out_pairs2 = [];
+		p1_index = 0;
+		p2_index = 0;
+
+		while p1_index != pairs1.size && p2_index != pairs2.size do
+			if (pairs1[p1_index][1] == pairs2[p2_index][0]) then
+				out_pairs1.append([pairs1[p1_index][0],pairs1[p1_index][1]])
+				out_pairs2.append([pairs2[p2_index][0],pairs2[p2_index][1]])
+
+				if(pairs1[p1_index].size > 2 && pairs1[p2_index].size > 2) then
+					internal_res = reconsider_pairs(pairs1[p1_index][2], pairs2[p2_index][2]);
+					out_pairs1.last.push(internal_res[0])
+					out_pairs2.last.push(internal_res[1])
+				end
+				p1_index += 1;
+				p2_index += 1;
+				next;
+			end
+			if(pairs1[p1_index][1] > pairs2[p2_index][0]) then
+				p2_index += 1;
+				next;
+			end
+			if(pairs1[p1_index][1] < pairs2[p2_index][0]) then
+				p1_index += 1;
+				next;
+			end
+		end
+		return [out_pairs1, out_pairs2];
 	end
 end
 
