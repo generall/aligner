@@ -37,7 +37,7 @@ class Recreator
 		prev_token2 = meta2.first;
 
 		prev_token1 = prev1 == nil ? prev_token1 : prev1;
-		prev_token2 = prev1 == nil ? prev_token2 : prev2;
+		prev_token2 = prev2 == nil ? prev_token2 : prev2;
 
 		pairs.each do |pair|
 			while m1_iterator != pair[0] do
@@ -131,5 +131,74 @@ class Recreator
 			m2_iterator += 1;
 		end
 		return [result_string1, result_string2]
+	end
+
+	# input : [Meta, ...], [pairs, ...], [prev, ...]
+	# output: [string, ...]
+	def multiline_reconstruction(meta_array, pairs_array, prev_array = nil)
+		n = meta_array.size;
+
+		prev_array = [nil]*n if prev_array == nil;
+		indexes = [0]*n;
+
+		res_strings = meta_array.map{|meta| meta.first == nil ? "" : meta.first.value;}
+		prev_tokens = meta_array.map{|meta| meta.first;}
+		
+		for i in 0..n do
+			prev_tokens[i] = prev_array[i] if prev_array[i] != nil;
+		end
+	end
+
+
+	def generate_chains(pairs_array)
+		n = pairs_array.size();
+		used_indexes = n.times.map{{}};
+		curr_indexes = [  0  ] * n;
+		chains = [];
+
+		for i in 0..n-1 do
+
+		while curr_indexes[i] < pairs_array[i].size do 
+
+			if used_indexes[i][curr_indexes[i]] != nil
+				curr_indexes[i] += 1;
+				next;
+			end
+			used_indexes[i][curr_indexes[i]] = 1;
+			# start chain creation
+			if pairs_array[i][curr_indexes[i]].size <= 2 then
+				chain = 
+				[i,
+					[
+						[
+							pairs_array[i][curr_indexes[i]][0],
+							pairs_array[i][curr_indexes[i]][1]
+						]
+					]
+				];
+				k = i + 1;
+				tid = pairs_array[i][curr_indexes[i]][1];
+				p "tid:" + tid.to_s
+				while k != n do
+					nexus = pairs_array[k].drop(curr_indexes[k]).index{|x| x[0] == tid}
+					if (nexus == nil) then
+						break;
+					else
+						nexus += curr_indexes[k];
+						break if used_indexes[k][nexus] != nil
+						used_indexes[k][nexus] = 1;
+						chain[1].push([pairs_array[k][nexus][0],pairs_array[k][nexus][1]]);
+						tid = pairs_array[k][nexus][1];
+						k += 1;
+					end
+				end
+					chains.push(chain);
+				else
+					# TODO recursivity
+				end
+				curr_indexes[i] += 1;
+			end
+		end
+		return chains;
 	end
 end

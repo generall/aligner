@@ -2,7 +2,6 @@ require './staff.rb'
 require './fsm.rb'
 require './expression.rb'
 
-@@Debug = true
 
 
 class Grammar
@@ -10,6 +9,7 @@ class Grammar
 	attr_accessor :rules, :rule_settings;
 
 	def initialize()
+    	@Debug = true
 		@rules = {}
 		@rule_settings = {};
 	end
@@ -141,14 +141,14 @@ def generate_FSM(grammar, axiom)
 		add_next_vertex(grammar, fsm, rule, vertex_by_set, 0);
 	end
 
-	vertex_by_set.each{|x| p x} if @@Debug;
+	vertex_by_set.each{|x| p x} if @Debug;
 
 	return fsm;
 end
 
 class Nonterm
-
 	def initialize(sym = nil, obj = nil, is_reducible = false)
+    	@Debug = true
 		@symbol = sym;
 		@object = obj;
 		@is_reducible = is_reducible;
@@ -167,6 +167,10 @@ class Nonterm
 
 	def !=(other)
 		return not(self == other)
+	end
+
+	def inspect()
+		return to_s()
 	end
 
 	def to_s()
@@ -230,7 +234,7 @@ def parse(fsm, expr, grammar)
 			end
 		end
 
-		if @@Debug then
+		if @Debug then
 			p "is_acceptable:   " + is_acceptable     .to_s;
 			p "signal:          " + signal            .to_s;
 			p "expr.last:       " + expr.last         .to_s;
@@ -253,7 +257,7 @@ def parse(fsm, expr, grammar)
 				to_production = fsm.get_value[0];
 				r_s           = rule.size # Rule_Size
 
-				if @@Debug then
+				if @Debug then
 					p "apply rule:      " + to_production.to_s + "->" + rule.to_s;
 					p "processed[top]:  " + to_production.to_s + "->" + processed[-r_s..-1] .to_s;
 				end
@@ -287,7 +291,7 @@ def parse(fsm, expr, grammar)
 
 			end
 		end
-		p "-------" if @@Debug
+		p "-------" if @Debug
 	end
 	return expr.last;
 end
@@ -300,11 +304,12 @@ end
 
 class LR_parser
 	def initialize()
+		@Debug = true
 		load './grammar.rb'
 		@grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
 		@grammar_machina.set_current(0);
 
-		if @@Debug then
+		if @Debug then
 			@grammar_machina.vertex_set.each{
 				|x| 
 				print x; print " --- ";
@@ -338,7 +343,7 @@ class LR_parser
 end
 
 
-if @@Debug && false then
+if @Debug && false then
 	@@grammar.add_rule(:main, [:expr    ], [:reducible]);
 	@@grammar.add_rule(:expr, [:expr, :p], [:reducible]);
 	@@grammar.add_rule(:expr, [:p       ], [:reducible]);
@@ -353,7 +358,7 @@ if @@Debug && false then
 	@@grammar.add_rule(:p, [TokenTemplate.new(:quote                                    )], [:reducible]);
 	@@grammar.add_rule(:p, [TokenTemplate.new(:regexp                                   )], [:reducible]);
 	@@grammar.add_rule(:p, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')','='])], [:reducible]);
-	grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
+	grammar_machina = generate_FSM(@grammar, [:main, [:expr], 0]);
 	grammar_machina.set_current(0);
 	grammar_machina.vertex_set.each{
 		|x| 

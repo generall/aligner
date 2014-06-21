@@ -48,6 +48,10 @@ class Token
 		end
 	end
 
+	def inspect()
+		return to_s()
+	end
+
 	def to_s()
 		return ""+@value.to_s+""
 		#return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
@@ -78,6 +82,10 @@ class TokenTemplate
 
 	def to_s()
 		return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
+	end
+
+	def inspect()
+		return to_s()
 	end
 
 	def cmp(other_token)

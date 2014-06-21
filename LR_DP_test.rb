@@ -11,42 +11,47 @@ def get_indent(str)
 	return "";
 end
 
-input_string1 = "f(a)(a+b)";
-input_string2 = "g()(c-d)";
+input_strings = [];
 
-indent1 = get_indent(input_string1);
-indent2 = get_indent(input_string2);
+input_strings.push("1 0 + ^ ^ $ : ");
+input_strings.push("1 0 ! + $ % ; ");
+input_strings.push("1 0 @ + $ % ; ");
+input_strings.push("1 0 - @ ;     ");
+input_strings.push("1 0 - @ ;     ");
 
-if indent1 != indent2 then
-	p "different indention: abort"
-	exit
-end
+indents = [];
+input_strings.each {|str| indents.push(get_indent(str)); }
+
 
 p = LR_parser.new
 
-m1 = p.parse_meta(input_string1) 
-m2 = p.parse_meta(input_string2)
+metas  = []
 
-m1.separate_first!; # separate first token to prevent indention
-m2.separate_first!;
+input_strings.each { |str| metas.push(p.parse_meta(str)); }
 
-m1.print_tree
-puts
-m2.print_tree
+metas.each {|m| m.separate_first!}
 
-# p m1.value
-# puts 
-# p m2.value
+metas.each {|m| p m.value}
 
 matcher = DPMatcher.new
 
-pairs = matcher.generate_pairs(m1.value, m2.value)
+pairs_array = [];
 
-p m1
-p m2
+for i in 0..metas.size-2 do 
+	pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
+end
 
+pairs_array.each{|x| p x}
+
+r = Recreator.new
+
+chains = r.generate_chains(pairs_array);
+
+chains.each{|ch| p ch}
+=begin
 lines = Recreator.new.reconstruct(m1, m2, pairs);
 
 
 p lines[0]
 p lines[1]
+=end
