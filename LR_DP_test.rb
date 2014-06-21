@@ -13,11 +13,15 @@ end
 
 input_strings = [];
 
-input_strings.push("1 0 + ^ ^ $ : ");
-input_strings.push("1 0 ! + $ % ; ");
-input_strings.push("1 0 @ + $ % ; ");
-input_strings.push("1 0 - @ ;     ");
-input_strings.push("1 0 - @ ;     ");
+input_strings.push("f(a + b)(b + c)");
+input_strings.push("f(a)(b - c)");
+input_strings.push("g(b - c)()");
+input_strings.push("d(b - c)(c)");
+#input_strings.push("1 0 + ^ ^ $ : ");
+#input_strings.push("1 0 ! + $ % ; ");
+#input_strings.push("1 0 @ + $ % ; ");
+#input_strings.push("1 0 - @ ;     ");
+#input_strings.push("1 0 - @ ;     ");
 
 indents = [];
 input_strings.each {|str| indents.push(get_indent(str)); }
@@ -48,6 +52,11 @@ r = Recreator.new
 chains = r.generate_chains(pairs_array);
 
 chains.each{|ch| p ch}
+
+lines = r.multiline_reconstruction(metas, chains)
+
+lines.each{|x| p x}
+
 =begin
 lines = Recreator.new.reconstruct(m1, m2, pairs);
 

@@ -64,6 +64,18 @@ class MetaExpression
 		end
 	end
 
+	def min_previous_spase
+		get_first_token.min_previous_spase
+	end
+
+	def min_follow_spase
+		get_last_token.min_follow_spase
+	end
+
+	def inspect
+		return to_s
+	end
+
 	def to_s
 		return value.to_s
 	end
