@@ -1,59 +1,26 @@
-require "./staff.rb";
-require "./expression.rb"
-require "./DP_matcher.rb"
-require "./LR_parser"
-require "./recreator.rb"
+require "./align.rb"
 
-
-def get_indent(str)
-	indent = str.match(/^\s/)
-	return indent[0] if(indent != nil)
-	return "";
-end
 
 input_strings = [];
 
-input_strings.push("f(a + b)(b + c)");
-input_strings.push("f(a)(b - c)");
-input_strings.push("g(b - c)()");
-input_strings.push("d(b - c)(c)");
+input_strings.push("@type = type;");
+#input_strings.push("@value = value;");
+input_strings.push("@except = except;");
+
+indents = [];
+input_strings.each {|str| indents.push(get_indent(str)); }
+
+#input_strings.push("f(a + b)(b + c)");
+#input_strings.push("f(a)(b - c)");
+#input_strings.push("g(b - c)()");
+#input_strings.push("d(b - c)(c)");
 #input_strings.push("1 0 + ^ ^ $ : ");
 #input_strings.push("1 0 ! + $ % ; ");
 #input_strings.push("1 0 @ + $ % ; ");
 #input_strings.push("1 0 - @ ;     ");
 #input_strings.push("1 0 - @ ;     ");
 
-indents = [];
-input_strings.each {|str| indents.push(get_indent(str)); }
-
-
-p = LR_parser.new
-
-metas  = []
-
-input_strings.each { |str| metas.push(p.parse_meta(str)); }
-
-metas.each {|m| m.separate_first!}
-
-metas.each {|m| p m.value}
-
-matcher = DPMatcher.new
-
-pairs_array = [];
-
-for i in 0..metas.size-2 do 
-	pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
-end
-
-pairs_array.each{|x| p x}
-
-r = Recreator.new
-
-chains = r.generate_chains(pairs_array);
-
-chains.each{|ch| p ch}
-
-lines = r.multiline_reconstruction(metas, chains)
+lines = test_aligment(input_strings)
 
 lines.each{|x| p x}
 

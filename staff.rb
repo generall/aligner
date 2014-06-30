@@ -24,7 +24,14 @@ def levenshtein(first, second)
 end
 
 class Token
-	attr_accessor :type, :value, :min_simularity, :necessary, :min_follow_spase, :min_previous_spase;
+	attr_accessor :type, 
+				:value, 
+				:min_simularity, 
+				:necessary, 
+				:min_follow_spase, 
+				:min_previous_spase, 
+				:str_index, 
+				:tkn_index;
 
 	def initialize(value, type, necessary, min_simularity, min_previous_spase, min_follow_spase)
 		@type               = type;
@@ -32,7 +39,9 @@ class Token
 		@necessary          = necessary;
 		@min_simularity     = min_simularity;
 		@min_previous_spase = min_previous_spase;
-		@min_follow_spase   = min_follow_spase
+		@min_follow_spase   = min_follow_spase;
+		@str_index          = 0;
+		@tkn_index          = 0;
 	end
 
 	def cmp(other_token)
@@ -43,6 +52,7 @@ class Token
 		if(@type != other_token.type) then
 			return 0;
 		else
+			return 0 if @necessary == false # for learning
 			max_len = [@value.size, other_token.value.size].max
 			return 1.0 - levenshtein(@value, other_token.value).to_f / max_len + other_token.min_simularity;
 		end
@@ -53,7 +63,7 @@ class Token
 	end
 
 	def to_s()
-		return ""+@value.to_s+""
+		return "t"+@tkn_index.to_s + ":"+@value.to_s+""
 		#return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
 	end
 end

@@ -1,6 +1,5 @@
 
 
-
 @@grammar.add_rule(:main, [:expr    ], [:reducible]);
 @@grammar.add_rule(:expr, [:expr, :p], [:reducible]);
 @@grammar.add_rule(:expr, [:p       ], [:reducible]);
@@ -36,3 +35,5 @@ bracket6  = [b_open_3       , b_close_3]
 @@grammar.add_rule(:t, [TokenTemplate.new(:quote                                    )], [:reducible]);
 @@grammar.add_rule(:t, [TokenTemplate.new(:regexp                                   )], [:reducible]);
 @@grammar.add_rule(:t, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')','='])], [:reducible]);
+
+

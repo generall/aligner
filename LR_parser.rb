@@ -9,7 +9,7 @@ class Grammar
 	attr_accessor :rules, :rule_settings;
 
 	def initialize()
-    	@Debug = true
+    	@Debug = true & false;
 		@rules = {}
 		@rule_settings = {};
 	end
@@ -148,7 +148,7 @@ end
 
 class Nonterm
 	def initialize(sym = nil, obj = nil, is_reducible = false)
-    	@Debug = true
+    	@Debug = true & false;
 		@symbol = sym;
 		@object = obj;
 		@is_reducible = is_reducible;
@@ -304,8 +304,15 @@ end
 
 class LR_parser
 	def initialize()
-		@Debug = true
+		@Debug = true & false;
+
+		warn_level = $VERBOSE
+		$VERBOSE = nil;
+
 		load './grammar.rb'
+
+		$VERBOSE = warn_level;
+
 		@grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
 		@grammar_machina.set_current(0);
 
@@ -325,12 +332,12 @@ class LR_parser
 		end
 	end
 
-	def parse_meta(input_string)
+	def parse_meta(input_string, erase_ins = true)
 		
 		@grammar_machina.set_current(0);
 
 		e = Expression.new(input_string);
-		e.erase_insignificant_tokens
+		e.erase_insignificant_tokens! if erase_ins
 		
 		expr = e.tokens.clone
 		expr += [Token.new(:eof, :eof, true, 0, 0, 0)]
