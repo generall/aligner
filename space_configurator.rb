@@ -39,7 +39,7 @@ class SpaceConf
 	end
 	def get_max(token1, token2, params)
 		ret = @max_by_type[[token1.type, token2.type]]
-		if ret == nil || ret = []
+		if ret == nil || ret == []
 			ret = glob_max;
 		else
 			# TODO write some code here

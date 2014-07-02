@@ -349,33 +349,3 @@ class LR_parser
 	end
 end
 
-
-if @Debug && false then
-	@@grammar.add_rule(:main, [:expr    ], [:reducible]);
-	@@grammar.add_rule(:expr, [:expr, :p], [:reducible]);
-	@@grammar.add_rule(:expr, [:p       ], [:reducible]);
-
-	open_bracket  = TokenTemplate.new(:spchar, ['(']);
-	close_bracket = TokenTemplate.new(:spchar, [')']);
-	b1 = [open_bracket, :expr, close_bracket]
-	b2 = [open_bracket       , close_bracket]
-	@@grammar.add_rule(:p, b1);
-	@@grammar.add_rule(:p, b2);
-	@@grammar.add_rule(:p, [TokenTemplate.new(:id                                       )], [:reducible]);
-	@@grammar.add_rule(:p, [TokenTemplate.new(:quote                                    )], [:reducible]);
-	@@grammar.add_rule(:p, [TokenTemplate.new(:regexp                                   )], [:reducible]);
-	@@grammar.add_rule(:p, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')','='])], [:reducible]);
-	grammar_machina = generate_FSM(@grammar, [:main, [:expr], 0]);
-	grammar_machina.set_current(0);
-	grammar_machina.vertex_set.each{
-		|x| 
-		print x; print " --- ";
-		print grammar_machina.get_value(x[0]);
-		print "\n"
-	} 
-
-	p "---"
-	grammar_machina.get_accepted_signals.each{|x| p x}
-	print "\n\n\n"
-
-end

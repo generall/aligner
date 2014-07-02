@@ -1,4 +1,5 @@
 
+require "./staff.rb"
 
 class MetaExpression
 	attr_accessor :value, :parent, :first;
@@ -82,44 +83,14 @@ class MetaExpression
 
 end
 
+
 class Expression
 
 	attr_accessor :tokens
 
 	def initialize(string_expr = nil)
-		@regexp_array = [];
-
-		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_spase>, <min_follow_space> ]
-		quote1_regexp = [/^'(\\.|[^'])*'/   , :quote , true , 0.1, 0, 1];
-		string_regexp = [/^"(\\.|[^"])*"/   , :quote , true , 0.1, 0, 1];
-		regexp_regexp = [/^\/(\\.|[^\/])*\//, :regexp, true , 0.2, 0, 1];
-		lvar_regexp   = [/^\@[[:word:]]+/   , :id    , true , 0.1, 0, 1];
-		gvar_regexp   = [/^\@\@[[:word:]]+/ , :id    , true , 0.1, 0, 1];
-		var_regexp    = [/^[[:word:]]+/     , :id    , true , 0.1, 0, 1];
-		spchar_regexp = [/^[^\w\s]/         , :spchar, true , 0  , 0, 1];
-		space_regexp  = [/^\s/              , :space , false, 0  , 0, 1];
-
-
-		@regexp_array += [string_regexp]
-		@regexp_array += [quote1_regexp]
-		@regexp_array += [lvar_regexp  ]
-		@regexp_array += [gvar_regexp  ]
-		@regexp_array += [var_regexp   ]
-		@regexp_array += [spchar_regexp]
-		@regexp_array += [regexp_regexp]
-		@regexp_array += [space_regexp ]
-
 		parse(string_expr) if string_expr != nil;
 
-	end
-
-	def type_by_value(value)
-		@regexp_array.each do |regexp|
-			res = regexp[0].match(value);
-			if res != nil then
-				return regexp[1];
-			end
-		end
 	end
 
 
@@ -133,7 +104,7 @@ class Expression
 		tkn_index = 0;
 		while (do_parse)  do
 			is_cmp = false
-			@regexp_array.each do |regexp|
+			TypeData.regexp_array.each do |regexp|
 				res = regexp[0].match(string_expr);
 				if res != nil then
 					is_cmp = true;

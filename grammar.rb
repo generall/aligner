@@ -4,16 +4,16 @@
 @@grammar.add_rule(:expr, [:expr, :p], [:reducible]);
 @@grammar.add_rule(:expr, [:p       ], [:reducible]);
 
-t1 = [:expr, TokenTemplate.new(:spchar, ['=']), :expr]
+t1 = [:expr, TokenTemplate.new(['=']), :expr]
 @@grammar.add_rule(:expr, t1)
 @@grammar.add_rule(:p, [:t], [:reducible])
 
-b_open_1  = TokenTemplate.new(:spchar, ['(']);
-b_close_1 = TokenTemplate.new(:spchar, [')']);
-b_open_2  = TokenTemplate.new(:spchar, ['[']);
-b_close_2 = TokenTemplate.new(:spchar, [']']);
-b_open_3  = TokenTemplate.new(:spchar, ['{']);
-b_close_3 = TokenTemplate.new(:spchar, ['}']);
+b_open_1  = TokenTemplate.new(['(']);
+b_close_1 = TokenTemplate.new([')']);
+b_open_2  = TokenTemplate.new(['[']);
+b_close_2 = TokenTemplate.new([']']);
+b_open_3  = TokenTemplate.new(['{']);
+b_close_3 = TokenTemplate.new(['}']);
 
 bracket1  = [b_open_1, :expr, b_close_1]
 bracket2  = [b_open_2, :expr, b_close_2]
@@ -31,9 +31,9 @@ bracket6  = [b_open_3       , b_close_3]
 @@grammar.add_rule(:t, bracket5);
 @@grammar.add_rule(:t, bracket6);
 
-@@grammar.add_rule(:t, [TokenTemplate.new(:id                                       )], [:reducible]);
-@@grammar.add_rule(:t, [TokenTemplate.new(:quote                                    )], [:reducible]);
-@@grammar.add_rule(:t, [TokenTemplate.new(:regexp                                   )], [:reducible]);
-@@grammar.add_rule(:t, [TokenTemplate.new(:spchar,:any,['[','{','(',']','}',')','='])], [:reducible]);
+@@grammar.add_rule(:t, [TokenTemplate.new(:id                                  )], [:reducible]);
+@@grammar.add_rule(:t, [TokenTemplate.new(:quote                               )], [:reducible]);
+@@grammar.add_rule(:t, [TokenTemplate.new(:regexp                              )], [:reducible]);
+@@grammar.add_rule(:t, [TokenTemplate.new(:spchar,['[','{','(',']','}',')','='])], [:reducible]);
 
 

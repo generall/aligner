@@ -184,11 +184,9 @@ class Learner
 		sum.default   = 0;
 		count.default = 0;
 		
-		conv = Expression.new
-
 		# generalization of upper bound
 		@data_min.each do |info|
-			ident = [conv.type_by_value(info["prev"]), conv.type_by_value(info["next"])]
+			ident = [TypeData.type_by_value(info["prev"]), TypeData.type_by_value(info["next"])]
 			sum  [ident] += info["delta"];
 			count[ident] += 1;
 		end
