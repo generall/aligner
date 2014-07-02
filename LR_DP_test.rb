@@ -3,9 +3,9 @@ require "./align.rb"
 
 input_strings = [];
 
-input_strings.push("@type = type + (a + b);");
-#input_strings.push("@value = value;");
-input_strings.push("@except = except - (b + n - k);" );
+input_strings.push("type = type + (a)");
+input_strings.push("@value = value;");
+input_strings.push("except = except - (b + n)" );
 
 indents = [];
 input_strings.each {|str| indents.push(get_indent(str)); }

@@ -1,25 +1,30 @@
 require "./staff.rb";
 require "./expression.rb"
-
+require "./space_configurator.rb"
 
 class Recreator
 
+	def initialize()
+		@sc = SpaceConf.new()
+
+	end
+
 	def get_string_from_meta(meta)
 		res_str  = meta.first == nil ? "" : meta.first.value;
-		prev_min = meta.first == nil ? 0  : meta.first.min_follow_spase;
+		prev_min = meta.first;
 		meta.value.each do |token|
 			if token.class == MetaExpression then
-				min_spaces = [token.get_first_token.min_previous_spase, prev_min].max;
+				min_spaces = @sc.get_min(token.get_first_token, prev_min) 
 				res_str += " " * min_spaces;
 				res_str += get_string_from_meta(token);
 
-				prev_min = token.get_last_token.min_follow_spase;
+				prev_min = token.get_last_token;
 			else
-				min_spaces = [token.min_previous_spase, prev_min].max;
+				min_spaces = @sc.get_min(token, prev_min)
 				res_str += " " * min_spaces;
 				res_str += token.value;
 
-				prev_min = token.min_follow_spase;
+				prev_min = token;
 			end
 		end
 		return res_str;
@@ -44,12 +49,12 @@ class Recreator
 			while indexes[line_index] != end_index do
 				t_token = meta_array[line_index].value[indexes[line_index]]
 				if t_token.class == Token then
-					min_spaces = [prev_tokens[line_index].min_follow_spase, t_token.min_previous_spase].max
+					min_spaces = @sc.get_min(prev_tokens[line_index], t_token)
 					res_strings[line_index] += " "*min_spaces;
 					res_strings[line_index] += t_token.value;
 					prev_tokens[line_index]  = t_token;
 				else
-					min_spaces = [prev_tokens[line_index].min_follow_spase, t_token.get_first_token.min_previous_spase].max
+					min_spaces = @sc.get_min(prev_tokens[line_index], t_token.get_first_token)
 					res_strings[line_index] += " "*min_spaces;
 					res_strings[line_index] += get_string_from_meta(t_token);
 					prev_tokens[line_index]  = t_token.get_last_token;
@@ -74,8 +79,8 @@ class Recreator
 
 			if chain.size <= 2
 				for i in begin_line..end_line do
-					min_space = [prev_tokens[i].min_follow_spase, meta_array[i].value[indexes[i]].min_previous_spase].max
-					res_strings[i] += " "*min_space
+					min_spaces = @sc.get_min(prev_tokens[i], meta_array[i].value[indexes[i]])
+					res_strings[i] += " "*min_spaces
 				end
 			end
 			
@@ -88,6 +93,8 @@ class Recreator
 			for i in begin_line..end_line do
 				delta[i] = max_size - res_strings[i].size
 			end
+
+
 			# limitations here
 			for i in begin_line..end_line do
 				res_strings[i] += " "*delta[i];
@@ -124,6 +131,9 @@ class Recreator
 		return res_strings
 	end
 
+
+	# input [ [ [index, index], [i, i], ... ], ...]
+	# output [ [line_id, [[token-id, token-id], [t-id, t-id], ...]], .... ] 
 
 	def generate_chains(pairs_array)
 		n = pairs_array.size();

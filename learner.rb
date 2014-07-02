@@ -91,6 +91,7 @@ class Learner
 
 		real_pairs = [];
 		i = 0;
+		tokens = [];
 		tokens[0] = exprs[0].tokens;
 		tokens[1] = exprs[1].tokens;
 
@@ -178,6 +179,9 @@ class Learner
 
 	def generalize()
 		sc    = SpaceConf.new
+		sc.min_by_type.clear();
+		sc.max_by_type.clear();
+
 		sum   = {};
 		count = {};
 
@@ -200,13 +204,13 @@ class Learner
 
 		sc.max_by_type.default = [];
 		@data_max.each do |info|
-			ident = [conv.type_by_value(info["prev"]), conv.type_by_value(info["next"])]
+			ident = [TypeData.type_by_value(info["prev"]), TypeData.type_by_value(info["next"])]
 			sc.max_by_type[ident] += [[info["delta"], info["params"]]];
 		end
 
 		puts sc.to_s;
 
-		#sc.save();
+		sc.save();
 
 	end
 end

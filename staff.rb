@@ -30,7 +30,7 @@ class TypeData
 
 	@@regexp_array = 
 	[
-		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_spase>, <min_follow_space> ]
+		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
 		[/^'(\\.|[^'])*'/   , :quote   , true , 0.1, 0, 1],  # quote1_regexp
 		[/^"(\\.|[^"])*"/   , :quote   , true , 0.1, 0, 1],  # string_regexp
 		[/^\/(\\.|[^\/])*\//, :regexp  , true , 0.2, 0, 1],  # regexp_regexp
@@ -63,19 +63,19 @@ class Token
 				:value, 
 				:min_simularity, 
 				:necessary, 
-				:min_follow_spase, 
-				:min_previous_spase, 
+				:min_follow_space, 
+				:min_previous_space, 
 				:str_index, 
 				:tkn_index;
 
 
-	def initialize(value, type, necessary, min_simularity, min_previous_spase, min_follow_spase)
+	def initialize(value, type, necessary, min_simularity, min_previous_space, min_follow_space)
 		@type               = type;
 		@value              = value;
 		@necessary          = necessary;
 		@min_simularity     = min_simularity;
-		@min_previous_spase = min_previous_spase;
-		@min_follow_spase   = min_follow_spase;
+		@min_previous_space = min_previous_space;
+		@min_follow_space   = min_follow_space;
 		@str_index          = 0;
 		@tkn_index          = 0;
 	end

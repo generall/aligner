@@ -65,12 +65,12 @@ class MetaExpression
 		end
 	end
 
-	def min_previous_spase
-		get_first_token.min_previous_spase
+	def min_previous_space
+		get_first_token.min_previous_space
 	end
 
-	def min_follow_spase
-		get_last_token.min_follow_spase
+	def min_follow_space
+		get_last_token.min_follow_space
 	end
 
 	def inspect

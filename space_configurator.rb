@@ -26,17 +26,19 @@ class SpaceConf
 		@max_by_type  = {};
 
 		glob_max = 10; # may calculate according to str size
+
+		load();
 	end
 
 	def get_min(token1, token2)
-
+		return 0 if token1 == nil || token2 == nil
 		ret = @min_by_type[[token1.type, token2.type]]
 		if ret == nil
-			ret = [token1.min_follow_space, token2.min_previous_spase].max
+			ret = [token1.min_follow_space, token2.min_previous_space].max
 		end
 		return ret;
-
 	end
+
 	def get_max(token1, token2, params)
 		ret = @max_by_type[[token1.type, token2.type]]
 		if ret == nil || ret == []
@@ -61,8 +63,8 @@ class SpaceConf
 	end
 
 	def load()
-		@min_by_type = Marshal.load( IO.read( "min_by_type.dat" ) );
-		@max_by_type = Marshal.load( IO.read( "max_by_type.dat" ) );
+		@min_by_type = Marshal.load( IO.read( "min_by_type.dat" ) ) if  File.exists?("min_by_type.dat");
+		@max_by_type = Marshal.load( IO.read( "max_by_type.dat" ) ) if  File.exists?("max_by_type.dat");
 	end
 
 	def to_s()

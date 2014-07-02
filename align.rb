@@ -18,7 +18,8 @@ def test_aligment(input_strings)
 	metas  = []
 	input_strings.each { |str| metas.push(p.parse_meta(str)); }
 	metas.each {|m| m.separate_first!}
-	#metas.each {|m| p m.value}
+	p "metas"
+	metas.each {|m| p m.value}
 	matcher = DPMatcher.new
 	pairs_array = [];
 
@@ -28,7 +29,8 @@ def test_aligment(input_strings)
 	#pairs_array.each{|x| p x}
 	r = Recreator.new
 	chains = r.generate_chains(pairs_array);
-	#chains.each{|ch| p ch}
+	p "chains:"
+	chains.each{|ch| p ch}
 	lines = r.multiline_reconstruction(metas, chains)
 	return lines
 end
