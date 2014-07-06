@@ -145,3 +145,13 @@ git clone https://github.com/generall/aligner.git
 ```
 
 Default hotkey for aligment is: `["ctrl+k","ctrl+a"]`.
+
+##Prospection
+
+Here is a list of things that have to be improved.
+
+* Automatic detection of similar lines for fully automated code alignment.
+* Customization for different languages.
+	* extended grammar
+	* extended set of types of token
+* to be continued...
