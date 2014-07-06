@@ -1,5 +1,4 @@
 require "./staff.rb";
-require 'json'
 
 
 def nearest_by_cos(array, params)
