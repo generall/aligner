@@ -2,8 +2,8 @@ require "./learner.rb"
 
 
 s = [];
-s.push("test  = 1;")
-s.push("test2 = 2;")
+s.push("test = a.begin     + 3")
+s.push("test = ccaksk.end  + 4")
 
 
 learner =  Learner.new

@@ -65,6 +65,8 @@ class MetaExpression
 		end
 	end
 
+	def 
+
 	def min_previous_space
 		get_first_token.min_previous_space
 	end

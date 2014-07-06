@@ -107,5 +107,29 @@ class DPMatcher
 		end
 		return [out_pairs1, out_pairs2];
 	end
+
+	# input: [meta1, meta2], [[i1,i2], [i1,i2], ....]
+	# output: float
+
+	def get_simularity(metas, pairs, n = [0])
+		sum = 0.0;
+		pairs.each do |pair|
+			if pair.size > 2 then
+				n[0] -= 1;
+				# magic numbers here
+				sum += get_simularity([metas[0].value[pair[0]], metas[1].value[pair[1]]], pair[2], n);
+			else
+				sum += metas[0].value[pair[0]].cmp(metas[1].value[pair[1]]);
+			end
+		end
+		n[0] += [metas[0].value.size(), metas[1].value.size()].max;
+		return sum;
+	end
+
+	def get_percent_simularity(metas, pairs)
+		n = [0];
+		s = get_simularity(metas, pairs, n);
+		return s / n[0].to_f;
+	end
 end
 

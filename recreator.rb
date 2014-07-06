@@ -2,9 +2,35 @@ require "./staff.rb";
 require "./expression.rb"
 require "./space_configurator.rb"
 
+class Range
+  def intersection(other)
+    return nil if (self.max < other.begin or other.max < self.begin) 
+    [self.begin, other.begin].max..[self.max, other.max].min
+  end
+  alias_method :&, :intersection
+end
+
+
+class Array
+	def bubble_sort!(&closure)
+		closure ||= lambda{ |x,y| x <=> y}
+
+		for i in 0..size-1 do
+			for j in 0..size-2 do
+				cmp = closure.call(self[j], self[j + 1]);
+				if cmp == 1 then
+					self[j + 1], self[j] = self[j], self[j + 1]
+				end
+			end
+		end
+
+	end
+end
+
 class Recreator
 
 	def initialize()
+		@Debug = true;
 		@sc = SpaceConf.new()
 
 	end
@@ -48,6 +74,7 @@ class Recreator
 		reconstruct_line_to = lambda do |line_index, end_index|
 			while indexes[line_index] != end_index do
 				t_token = meta_array[line_index].value[indexes[line_index]]
+				begin
 				if t_token.class == Token then
 					min_spaces = @sc.get_min(prev_tokens[line_index], t_token)
 					res_strings[line_index] += " "*min_spaces;
@@ -59,11 +86,22 @@ class Recreator
 					res_strings[line_index] += get_string_from_meta(t_token);
 					prev_tokens[line_index]  = t_token.get_last_token;
 				end
+				rescue
+					p "Exceprion: "
+					p "line_index: " + line_index.to_s
+					p "token_index: " + indexes[line_index].to_s
+					p "end_index: " + end_index.to_s
+					p "metas: " + meta_array[line_index].value.to_s
+
+					exit();
+				end
 				indexes[line_index] += 1;
 			end
 		end
 		# chain processing
+
 		chains.each do |chain|
+
 			begin_line = chain[0];
 			end_line   = begin_line + chain[1].size
 
@@ -97,7 +135,26 @@ class Recreator
 
 			# limitations here
 			for i in begin_line..end_line do
-				res_strings[i] += " "*delta[i];
+				accept = true;
+
+				if delta[i] > 0 then
+					t1 = prev_tokens[i]
+					t2 = meta_array[i].value[indexes[i]];
+					if t2.class == MetaExpression
+						t2 = t2.get_first_token
+					end
+					params = [];
+					params.push(t2.str_index);
+					limit =  @sc.get_max(t1, t2, params);
+					accept = delta[i] < limit;
+					if @Debug & false then
+						p "prev: " + t1.type .to_s;
+						p "next: " + t2.type .to_s;
+						p "delta:" + delta[i].to_s;
+						p "max:  " + limit   .to_s;
+					end
+				end
+				res_strings[i] += " "*delta[i] if accept;
 			end
 
 			if chain.size > 2
@@ -133,7 +190,7 @@ class Recreator
 
 
 	# input [ [ [index, index], [i, i], ... ], ...]
-	# output [ [line_id, [[token-id, token-id], [t-id, t-id], ...]], .... ] 
+	# output [ [line_id, [[token-id, token-id], [t-id, t-id], ...]], .... ]
 
 	def generate_chains(pairs_array)
 		n = pairs_array.size();
@@ -189,11 +246,27 @@ class Recreator
 		end
 
 		# sort
-		chains.sort! do |x,y|
+		chains.bubble_sort! do |x,y|
+			# TODO add intersection here! Add convertation to line!
+			x_range = x[0]..(x[0] + x[1].size)
+			y_range = y[0]..(y[0] + y[1].size)
+
+
+			str_inter = x_range & y_range;
+
 			x_min = 0;
 			y_min = 0;
-			x[1].each{ |pair| x_min = [x_min, pair[0], pair[1]].max }
-			y[1].each{ |pair| y_min = [y_min, pair[0], pair[1]].max }
+
+			x_by_lines = x[1].map{|i| i[0]} + [x[1].last[1]]
+			y_by_lines = y[1].map{|i| i[0]} + [y[1].last[1]]
+
+			if str_inter != nil
+				x_range = str_inter;
+				y_range = str_inter;
+			end
+			
+			x_range.each{ |i| x_min = [x_min, x_by_lines[i - x[0]]].max }
+			y_range.each{ |i| y_min = [y_min, y_by_lines[i - y[0]]].max }
 			x_min <=> y_min;
 		end
 

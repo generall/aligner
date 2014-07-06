@@ -90,7 +90,8 @@ class Token
 		else
 			return 0 if @necessary == false # for learning
 			max_len = [@value.size, other_token.value.size].max
-			return 1.0 - levenshtein(@value, other_token.value).to_f / max_len + other_token.min_simularity;
+			res = 1.0 - levenshtein(@value, other_token.value).to_f / max_len + other_token.min_simularity;
+			return res > 1.0 ? 1.0 : res;
 		end
 	end
 

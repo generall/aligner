@@ -8,11 +8,17 @@ def nearest_by_cos(array, params)
 
 	nearest = array.each_with_index.min_by do |x|
 		p = x[0]
-		mult = (0...p.count-1).inject(0) {|r, i| r + params[i]*p[i]}
-		mod1 = p.inject(0){|r,x| r + x**2}
-		dist = mult / Math::sqrt(mod2 * mod1)
-		return dist;
+		if p.count > 1 then
+			mult = (0..p.count-1).inject(0) {|r, i| r + params[i]*p[i]}
+			mod1 = p.inject(0){|r,x| r + x**2}
+			dist = 1.0 - mult / Math::sqrt(mod2 * mod1)
+		else
+			dist = (params[0] - p[0]).abs
+		end
+		
+		#return dist;
 	end
+	p nearest
 	return nearest[1]; # returns nearest index
 
 end
@@ -25,7 +31,7 @@ class SpaceConf
 		@min_by_type  = {};
 		@max_by_type  = {};
 
-		glob_max = 10; # may calculate according to str size
+		@glob_max = 100; # may calculate according to str size
 
 		load();
 	end
@@ -42,7 +48,7 @@ class SpaceConf
 	def get_max(token1, token2, params)
 		ret = @max_by_type[[token1.type, token2.type]]
 		if ret == nil || ret == []
-			ret = glob_max;
+			ret = @glob_max;
 		else
 			# TODO write some code here
 			# find nearest by cos

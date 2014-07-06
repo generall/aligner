@@ -121,18 +121,22 @@ class Learner
 		uneven_pairs = expected_pairs - real_pairs;
 		p uneven_pairs
 		uneven_pairs.each do |pair|
+			long_str_index  = strings[0].size >  strings[1].size ? 0 : 1;		
+			short_str_index = strings[0].size <= strings[1].size ? 0 : 1;		
+			
 			info = {};
-			info["prev" ]  = tokens[0][pair[0]].value;
-			info["next" ]  = tokens[1][pair[1]].value;
+			info["prev" ]  = tokens[short_str_index][pair[short_str_index] - 1].value;
+			info["next" ]  = tokens[short_str_index][pair[short_str_index]    ].value;
+
 			info["delta"]  = (tokens[0][pair[0]].str_index - tokens[1][pair[1]].str_index).abs
 			info["params"] = [];
 
-			long_str_index  = strings[0].size >  strings[1].size ? 0 : 1;		
-			short_str_index = strings[0].size <= strings[1].size ? 0 : 1;		
 
-			info["params"].push(strings[long_str_index ].size);
-			info["params"].push(strings[short_str_index].size);
-			info["params"].push(tokens[long_str_index ][pair[long_str_index ]].str_index);
+			# info["params"].push(strings[short_str_index].size);
+			# info["params"].push(strings[long_str_index ].size);
+			# info["params"].push(tokens[long_str_index ][pair[long_str_index ]].str_index);
+			# info["params"].push(tokens[short_str_index][pair[short_str_index]].str_index);
+			# info["params"].push([tokens[0][pair[0]].str_index, tokens[1][pair[1]].str_index].max);
 			info["params"].push(tokens[short_str_index][pair[short_str_index]].str_index);
 
 			@data_max.push(info)
