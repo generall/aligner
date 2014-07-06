@@ -68,7 +68,13 @@ class Grammar
 
 end 
 
+warn_level = $VERBOSE
+$VERBOSE = nil;
+
 @@grammar =Grammar.new
+
+$VERBOSE = warn_level;
+
 
 #rules: [signal, [[nonterm, [term,term,...], index], [] , ... ] ]
 #vertex_by_set: number of vertex by rule

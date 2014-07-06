@@ -30,7 +30,7 @@ end
 class Recreator
 
 	def initialize()
-		@Debug = true;
+		@Debug = true & false;
 		@sc = SpaceConf.new()
 
 	end
@@ -164,7 +164,6 @@ class Recreator
 				for i in begin_line..end_line do
 					metas[i] = meta_array[i].value[indexes[i]]
 				end
-				# p metas
 				strings = multiline_reconstruction(metas, chain[2], prev_tokens)
 
 				for i in begin_line..end_line do
@@ -182,7 +181,6 @@ class Recreator
 		end
 
 		for i in 0..n-1 do
-			# p meta_array[i]
 			reconstruct_line_to.call(i, meta_array[i].value.size)
 		end
 		return res_strings

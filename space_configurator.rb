@@ -17,7 +17,6 @@ def nearest_by_cos(array, params)
 		
 		#return dist;
 	end
-	p nearest
 	return nearest[1]; # returns nearest index
 
 end
@@ -27,8 +26,8 @@ class SpaceConf
 	attr_accessor :min_by_type, :max_by_type
 
 	def initialize
-		@min_by_type  = {};
-		@max_by_type  = {};
+		@min_by_type = {};
+		@max_by_type = {};
 
 		@glob_max = 100; # may calculate according to str size
 
