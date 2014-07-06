@@ -5,6 +5,7 @@
 @@grammar.add_rule(:expr, [:p       ], [:reducible]);
 
 t1 = [:expr, TokenTemplate.new(['=']), :expr]
+
 @@grammar.add_rule(:expr, t1)
 @@grammar.add_rule(:p, [:t], [:reducible])
 
