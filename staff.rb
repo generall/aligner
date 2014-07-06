@@ -36,6 +36,7 @@ class TypeData
 		[/^\d+\.\d+/        , :float       , true , 0.1, 0, 1],  # float
 		[/^\d+/             , :int         , true , 0.1, 0, 1],  # integer
 		[/^\.[[:word:]]+/   , :method      , true , 0.1, 0, 1],  # method
+		[/^\:[[:word:]]+/   , :symbol      , true , 0.1, 0, 1],  # method
 		[/^\@[[:word:]]+/   , :id          , true , 0.1, 0, 1],  # lvar_regexp
 		[/^\@\@[[:word:]]+/ , :id          , true , 0.1, 0, 1],  # gvar_regexp
 		[/^[[:word:]]+/     , :id          , true , 0.1, 0, 1],  # var_regexp

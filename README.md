@@ -67,7 +67,7 @@ and
 f(a    , b + c)
 f(b + c, a    )
 ```
-When using the the grammar, the program causes the alignment of the second type,
+When using the grammar, the program causes the alignment of the second type,
 in spite of the fact that different function arguments are similar in spelling.
 Such behavior is, of course, leads to improvement of readability.
 

@@ -6,6 +6,7 @@ require "./recreator.rb"
 
 
 def get_indent(str)
+	return "" if str == nil
 	indent = str.match(/^\s+/)
 	return indent[0] if(indent != nil)
 	return "";
@@ -65,6 +66,10 @@ end
 
 def align(input_strings)
 	indents = [];
+	for i in 0..input_strings.size-1 do
+		input_strings[i] ||= "";
+	end
+
 	input_strings.each {|str| indents.push(get_indent(str)); }
 	groups = [];
 	indent_by_group = [];

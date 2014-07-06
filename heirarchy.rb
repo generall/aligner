@@ -2,18 +2,19 @@
 class TypeHierarchy
 	@@types_inheritance = {};
 
-	@@types_inheritance[:space      ] = nil;
-	@@types_inheritance[:quote      ] = nil;
-	@@types_inheritance[:regexp     ] = nil;
-	@@types_inheritance[:id         ] = nil;
-	@@types_inheritance[:spchar     ] = nil;
-	@@types_inheritance[:int        ] = nil;
+	@@types_inheritance[:space ] = nil;
+	@@types_inheritance[:quote ] = nil;
+	@@types_inheritance[:regexp] = nil;
+	@@types_inheritance[:id    ] = nil;
+	@@types_inheritance[:spchar] = nil;
+	@@types_inheritance[:int   ] = nil;
 
 
 	@@types_inheritance[:punctuation] = :spchar;
 	@@types_inheritance[:float      ] = :int   ;
 	@@types_inheritance[:int        ] = :id    ;
 	@@types_inheritance[:method     ] = :id    ;
+	@@types_inheritance[:symbol     ] = :id    ;
 	@@types_inheritance[:bracket    ] = :spchar;
 	@@types_inheritance[:operator   ] = :spchar;
 
