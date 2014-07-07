@@ -38,6 +38,7 @@ def test_aligment(input_strings)
 		i += 1;
 	end
 	r = Recreator.new
+	r.set_debug true;
 	chains = r.generate_chains(pairs_array);
 	p "chains:"
 	chains.each{|ch| p ch}
