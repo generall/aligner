@@ -1,10 +1,10 @@
 aligner
 =======
 
-Sublime Text plugin for automatic code aligment.
+Sublime Text plugin for automatic code alignment.
 
 This project is a tool for automatic code alignment. 
-As is known to improve readability is often used formatting source code so that similar syntactic structures are arranged one above the other.
+Formatting source code so that similar syntactic structures are arranged one above the other is often used to improve readability.
 
 First of all, for convenience, the lines of code are split into tokens having a generic type.
 For example, the identifiers have type `:id`, and the brackets have type `:bracket`.
@@ -140,11 +140,11 @@ sudo apt-get install ruby
 To install the plugin, clone it to your Siblime Text 2/3 Package directory with following command:
 
 ```
-cd <path_to_package_dir>
+cd ~/.config/sublime-text-3/Packages
 git clone https://github.com/generall/aligner.git
 ```
 
-Default hotkey for aligment is: `["ctrl+k","ctrl+a"]`.
+Default hotkey for alignment is: `["ctrl+k","ctrl+a"]`.
 
 ##Prospection
 
