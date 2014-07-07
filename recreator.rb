@@ -32,21 +32,35 @@ class Recreator
 	def initialize()
 		@Debug = true & false;
 		@sc = SpaceConf.new()
-
 	end
+
+	def set_debug(d)
+		@Debug = d;
+	end
+
 
 	def get_string_from_meta(meta)
 		res_str  = meta.first == nil ? "" : meta.first.value;
 		prev_min = meta.first;
 		meta.value.each do |token|
 			if token.class == MetaExpression then
-				min_spaces = @sc.get_min(token.get_first_token, prev_min) 
+				min_spaces = @sc.get_min(prev_min, token.get_first_token) 
+				if @Debug then
+					p "from ", prev_min.type
+					p "to", token.get_first_token.type
+					p min_spaces
+				end
 				res_str += " " * min_spaces;
 				res_str += get_string_from_meta(token);
 
 				prev_min = token.get_last_token;
 			else
-				min_spaces = @sc.get_min(token, prev_min)
+				min_spaces = @sc.get_min(prev_min, token)
+				if @Debug then
+					p "from ", prev_min.type
+					p "to", token.type
+					p min_spaces
+				end
 				res_str += " " * min_spaces;
 				res_str += token.value;
 
@@ -58,33 +72,42 @@ class Recreator
 
 	# input : [Meta, ...], [chain, ...], [prev, ...]
 	# output: [string, ...]
-	def multiline_reconstruction(meta_array, chains, prev_array = nil)
+	def multiline_reconstruction(meta_array, chains)
+
 		n = meta_array.size;
 
-		prev_array = [nil]*n if prev_array == nil;
 		indexes = [0]*n;
 
-		res_strings = meta_array.map{|meta| meta.first == nil ? "" : meta.first.value;}
-		prev_tokens = meta_array.map{|meta| meta.first;}
-		
-		for i in 0..n-1 do
-			prev_tokens[i] = prev_array[i] if prev_array[i] != nil;
-		end
+		@prev_tokens ||= [];
 
+		res_strings = meta_array.map{|meta| meta.first == nil ? "" : meta.first.value;}
+		meta_array.each_with_index{|meta, i| @prev_tokens[i] ||= meta.first;}
+
+		
 		reconstruct_line_to = lambda do |line_index, end_index|
 			while indexes[line_index] != end_index do
 				t_token = meta_array[line_index].value[indexes[line_index]]
 				begin
 				if t_token.class == Token then
-					min_spaces = @sc.get_min(prev_tokens[line_index], t_token)
+					min_spaces = @sc.get_min(@prev_tokens[line_index], t_token)
+					if @Debug then
+						p "from ", @prev_tokens[line_index].type
+						p "to", t_token.type
+						p min_spaces
+					end
 					res_strings[line_index] += " "*min_spaces;
 					res_strings[line_index] += t_token.value;
-					prev_tokens[line_index]  = t_token;
+					@prev_tokens[line_index]  = t_token;
 				else
-					min_spaces = @sc.get_min(prev_tokens[line_index], t_token.get_first_token)
+					min_spaces = @sc.get_min(@prev_tokens[line_index], t_token.get_first_token)
+					if @Debug then
+						p "from ", @prev_tokens[line_index].type
+						p "to", t_token.get_first_token.type
+						p min_spaces
+					end
 					res_strings[line_index] += " "*min_spaces;
 					res_strings[line_index] += get_string_from_meta(t_token);
-					prev_tokens[line_index]  = t_token.get_last_token;
+					@prev_tokens[line_index]  = t_token.get_last_token;
 				end
 				rescue
 					p "Exceprion: "
@@ -107,6 +130,7 @@ class Recreator
 
 			line_index = chain[0];
 
+			#byebug
 
 			chain[1].each do |pair|
 				reconstruct_line_to.call(line_index, pair[0])
@@ -114,10 +138,11 @@ class Recreator
 				reconstruct_line_to.call(line_index, pair[1])
 			end
 			
-
+			#debugger
+			# TODO some fix here 
 			if chain.size <= 2
 				for i in begin_line..end_line do
-					min_spaces = @sc.get_min(prev_tokens[i], meta_array[i].value[indexes[i]])
+					min_spaces = @sc.get_min(@prev_tokens[i], meta_array[i].value[indexes[i]])
 					res_strings[i] += " "*min_spaces
 				end
 			end
@@ -138,7 +163,7 @@ class Recreator
 				accept = true;
 
 				if delta[i] > 0 then
-					t1 = prev_tokens[i]
+					t1 = @prev_tokens[i]
 					t2 = meta_array[i].value[indexes[i]];
 					if t2.class == MetaExpression
 						t2 = t2.get_first_token
@@ -164,7 +189,7 @@ class Recreator
 				for i in begin_line..end_line do
 					metas[i] = meta_array[i].value[indexes[i]]
 				end
-				strings = multiline_reconstruction(metas, chain[2], prev_tokens)
+				strings = multiline_reconstruction(metas, chain[2])
 
 				for i in begin_line..end_line do
 					res_strings[i] += strings[i];
@@ -174,7 +199,7 @@ class Recreator
 			else
 				for i in begin_line..end_line do
 					res_strings[i] += meta_array[i].value[indexes[i]].value
-					prev_tokens[i]  = meta_array[i].value[indexes[i]]
+					@prev_tokens[i]  = meta_array[i].value[indexes[i]]
 					indexes[i] += 1;
 				end
 			end

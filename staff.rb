@@ -30,21 +30,22 @@ class TypeData
 	@@regexp_array = 
 	[
 		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
-		[/^'(\\.|[^'])*'/   , :quote       , true , 0.1, 0, 1],  # quote1_regexp
-		[/^"(\\.|[^"])*"/   , :quote       , true , 0.1, 0, 1],  # string_regexp
-		[/^\/(\\.|[^\/])*\//, :regexp      , true , 0.2, 0, 1],  # regexp_regexp
-		[/^\d+\.\d+/        , :float       , true , 0.1, 0, 1],  # float
-		[/^\d+/             , :int         , true , 0.1, 0, 1],  # integer
-		[/^\.[[:word:]]+/   , :method      , true , 0.1, 0, 1],  # method
-		[/^\:[[:word:]]+/   , :symbol      , true , 0.1, 0, 1],  # method
-		[/^\@[[:word:]]+/   , :id          , true , 0.1, 0, 1],  # lvar_regexp
-		[/^\@\@[[:word:]]+/ , :id          , true , 0.1, 0, 1],  # gvar_regexp
-		[/^[[:word:]]+/     , :id          , true , 0.1, 0, 1],  # var_regexp
-		[/^[\.\,\;]/        , :punctuation , true , 0.1, 0, 1],  # punctuation
-		[/^[\{\[\(\)\]\}]/  , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
-		[/^[\=\+\-\*\&\^\~]/, :operator    , true , 0.1, 0, 1],  # bracket_regexp
-		[/^[^\w\s]/         , :spchar      , true , 0  , 0, 1],  # spchar_regexp
-		[/^\s/              , :space       , false, 0  , 0, 1]   # space_regexp
+		[/^'(\\.|[^'])*'/      , :quote       , true , 0.1, 0, 1],  # quote1_regexp
+		[/^"(\\.|[^"])*"/      , :quote       , true , 0.1, 0, 1],  # string_regexp
+		[/^\/(\\.|[^\/])*\//   , :regexp      , true , 0.2, 0, 1],  # regexp_regexp
+		[/^\d+\.\d+/           , :float       , true , 0.1, 0, 1],  # float
+		[/^\d+/                , :int         , true , 0.1, 0, 1],  # integer
+		[/^\.[[:word:]]+/      , :method      , true , 0.1, 0, 1],  # method
+		[/^[\.\,\;]/           , :punctuation , true , 0.1, 0, 1],  # punctuation
+		[/^[\{\[\(\)\]\}]/     , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
+		[/^[\=\+\-\*\&\^\~]/   , :operator    , true , 0.1, 0, 1],  # bracket_regexp
+		[/^\:[[:word:]]+/      , :symbol      , true , 0.1, 0, 1],  # symbol
+		[/^[^\w\s][[:word:]]+/ , :id          , true , 0.1, 0, 1],  # id
+		[/^\@[[:word:]]+/      , :id          , true , 0.1, 0, 1],  # lvar_regexp
+		[/^\@\@[[:word:]]+/    , :id          , true , 0.1, 0, 1],  # gvar_regexp
+		[/^[[:word:]]+/        , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/            , :spchar      , true , 0  , 0, 1],  # spchar_regexp
+		[/^\s/                 , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
 	def self.type_by_value(value)

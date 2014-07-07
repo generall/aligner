@@ -11,17 +11,8 @@ input_strings = [];
 
 
 
-	input_strings.push("p = LR_parser.new");
-	input_strings.push("metas  = []");
-	input_strings.push("   input_strings.each { |str| metas.push(p.parse_meta(str)); }");
-	input_strings.push("   metas.each {|m| m.separate_first!}");
-	input_strings.push("p \"metas\"");
-	input_strings.push("metas.each {|m| p m.value}");
-	input_strings.push("");
-	input_strings.push("pairs_array = [];");
-
-
-
+	input_strings.push("1,2,3");
+	input_strings.push("1,2,3");
 
 
 
@@ -30,7 +21,7 @@ input_strings = [];
 # input_strings.push("info[\"params\"].push(strings[short_str_index].size);")
 # input_strings.push("info[\"params\"].push(tokens[long_str_index ][pair[long_str_index ]].str_index);")
 
-lines = align(input_strings)
+lines = test_aligment(input_strings)
 
 lines.each{|x| p x}
 

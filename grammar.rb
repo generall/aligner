@@ -5,8 +5,10 @@
 @@grammar.add_rule(:expr, [:p       ], [:reducible]);
 
 t1 = [:expr, TokenTemplate.new(['=']), :expr]
+t2 = [:expr, TokenTemplate.new([',']), :expr]
 
 @@grammar.add_rule(:expr, t1)
+@@grammar.add_rule(:expr, t2)
 @@grammar.add_rule(:p, [:t], [:reducible])
 
 b_open_1  = TokenTemplate.new(['(']);
