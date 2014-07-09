@@ -29,9 +29,10 @@ end
 
 class Recreator
 
-	def initialize()
+	def initialize(type)
+		@type = type
 		@Debug = true & false;
-		@sc = SpaceConf.new()
+		@sc = SpaceConf.new(type)
 	end
 
 	def set_debug(d)

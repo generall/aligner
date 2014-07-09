@@ -13,7 +13,7 @@ def get_indent(str)
 end
 
 
-def test_aligment(input_strings)
+def test_aligment(input_strings, type)
 
 	p = LR_parser.new
 	metas  = []
@@ -37,7 +37,7 @@ def test_aligment(input_strings)
 		p matcher.get_percent_simularity([metas[i], metas[i + 1]] , pairs)
 		i += 1;
 	end
-	r = Recreator.new
+	r = Recreator.new(type)
 	r.set_debug true;
 	chains = r.generate_chains(pairs_array);
 	p "chains:"
@@ -49,8 +49,8 @@ def test_aligment(input_strings)
 end
 
 # no indent is observed
-def align_group(input_strings)
-	p = LR_parser.new
+def align_group(input_strings, type)
+	p = LR_parser.new(type)
 	metas  = []
 	input_strings.each { |str| metas.push(p.parse_meta(str)); }
 	metas.each {|m| m.separate_first!}
@@ -59,13 +59,13 @@ def align_group(input_strings)
 	for i in 0..metas.size-2 do 
 		pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
 	end
-	r = Recreator.new
+	r = Recreator.new(type)
 	chains = r.generate_chains(pairs_array);
 	lines = r.multiline_reconstruction(metas, chains)
 	return lines
 end
 
-def align(input_strings)
+def align(input_strings, type)
 	indents = [];
 	for i in 0..input_strings.size-1 do
 		input_strings[i] ||= "";
@@ -98,10 +98,10 @@ def align(input_strings)
 	result = [];
 	groups.each_with_index do |group, i|
 		if group.size > 1 then
-			group_res = align_group(group);
+			group_res = align_group(group, type);
 			result   += group_res.map{|x| indent_by_group[i] + x }
 		else
-			result.push(indent_by_group[i] + group[0])
+			result.push(indent_by_group[i] + group[0].strip)
 		end
 	end
 	return result

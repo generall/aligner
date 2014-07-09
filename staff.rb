@@ -27,7 +27,15 @@ end
 
 class TypeData
 
-	@@regexp_array = 
+	@@type = :none
+
+	def self.set_type(t)
+		@@type = t;
+	end
+
+	@@regexp_array = {}
+
+	@@regexp_array[:default] = 
 	[
 		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
 		[/^'(\\.|[^'])*'/      , :quote       , true , 0.1, 0, 1],  # quote1_regexp
@@ -48,8 +56,40 @@ class TypeData
 		[/^\s/                 , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
+	@@regexp_array[:C99] =
+	[
+		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
+		[/^'(\\.|[^'])*'/                   , :quote       , true , 0.1, 0, 1],  # quote1_regexp
+		[/^"(\\.|[^"])*"/                   , :quote       , true , 0.1, 0, 1],  # string_regexp
+		[/^\/\/.*/                          , :comment     , true , 0.1, 1, 0],  # comment
+		[/^\/\*.*?\*\//                     , :comment     , true , 0.1, 1, 0],  # comment
+		[/^\/\*.*/                          , :comment     , true , 0.1, 1, 0],  # comment
+		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/  , :float       , true , 0.1, 0, 1],  # float
+		[/^([-+]?\d*\.?\d+)/                , :float       , true , 0.1, 0, 1],  # float
+		[/^\*[[:word:]]+/                   , :ptr         , true , 0.1, 1, 0],  # define
+		[/^\#[[:word:]]+/                   , :define      , true , 0.1, 1, 0],  # pointer
+		[/^[\;]/                            , :delim       , true , 0.1, 0, 1],  # end of instruction
+		[/^[\,]/                            , :comma       , true , 0.1, 0, 1],  # comma
+		[/^[\:]/                            , :dpoint      , true , 0.1, 0, 1],  # dpoint
+		[/^([\*\/\%\+\-\&\^\|])?\=/         , :assigment   , true , 0.1, 1, 1],  # assigment
+		[/^(<<|>>)\=/                       , :assigment   , true , 0.1, 1, 1],  # assigment
+		[/^(<<|>>)/                         , :shift       , true , 0.1, 1, 1],  # shift
+		[/^(>|<|==|<=|>=|!=)/               , :compare     , true , 0.1, 1, 1],  # compare
+		[/^(\|\||\&\&)/                     , :logical     , true , 0.1, 1, 1],  # logical
+		[/^(\.|->)/                         , :postfix     , true , 0.1, 0, 0],  # postfix
+		[/^(--|\+\+)/                       , :increm      , true , 0.1, 0, 0],  # increm
+		[/^[\&\~\!]/                        , :uoperator   , true , 0.1, 0, 1],  # unary operator
+		[/^[\+\-\*\%]/                      , :boperator   , true , 0.1, 0, 1],  # binary operator
+		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
+		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
+		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/            				, :spchar      , true , 0  , 1, 1],  # spchar_regexp
+		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
+	]
+
+
 	def self.type_by_value(value)
-		@@regexp_array.each do |regexp|
+		@@regexp_array[@@type].each do |regexp|
 			res = regexp[0].match(value);
 			if res != nil then
 				return regexp[1];
@@ -58,7 +98,7 @@ class TypeData
 	end
 
 	def self.regexp_array()
-		return @@regexp_array
+		return @@regexp_array[@@type]
 	end
 
 end
@@ -112,7 +152,13 @@ end
 
 
 class TokenTemplate
-	attr_accessor :type, :value;
+	attr_accessor :type, :value, :ltype;
+
+	@@ltype = :default;
+
+	def self.set_ltype(t)
+		@@ltype = t;
+	end
 
 	def initialize(data = :any, except = [])
 
@@ -150,7 +196,7 @@ class TokenTemplate
 	def cmp(other_token) # compare Token with TokenTemplate
 		return !@except.include?(other_token.value) if @type == :any && other_token.type != :eof;
 		if @value == :any then
-			return @type.is_p_of?(other_token.type) && !@except.include?(other_token.value);
+			return @type.is_p_of?(other_token.type, @@ltype) && !@except.include?(other_token.value);
 		else
 			return @value.include?(other_token.value);
 		end 
