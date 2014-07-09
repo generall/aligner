@@ -154,4 +154,5 @@ Here is a list of things that have to be improved.
 * Customization for different languages.
 	* extended grammar
 	* extended set of types of token
+* Extended machine learning for alignment decision
 * to be continued...

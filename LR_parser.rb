@@ -71,9 +71,11 @@ end
 warn_level = $VERBOSE
 $VERBOSE = nil;
 
-@@grammar =Grammar.new
+@@grammar = Grammar.new
+@@type = :default;
 
 $VERBOSE = warn_level;
+
 
 
 #rules: [signal, [[nonterm, [term,term,...], index], [] , ... ] ]
@@ -309,11 +311,15 @@ def tree_to_metaexpression(tree, meta)
 end
 
 class LR_parser
-	def initialize()
+	def initialize(type = :default)
 		@Debug = true & false;
+
+		TokenTemplate.set_ltype type
 
 		warn_level = $VERBOSE
 		$VERBOSE = nil;
+
+		@@type = type
 
 		load './grammar.rb'
 

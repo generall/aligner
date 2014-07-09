@@ -64,7 +64,9 @@ end
 
 class Learner
 
-	def initialize()
+	def initialize(type)
+		@type = type
+		TypeData.set_type type
 		@Debug = true
 		@data_max = [];
 		@data_min = [];
@@ -101,7 +103,7 @@ class Learner
 		if real_pairs[0][0] == 0 || real_pairs[0][1] == 0 then
 			real_pairs.delete_at(0)
 		end 
-		p = LR_parser.new
+		p = LR_parser.new(@type)
 		metas  = []
 		strings.each { |str| metas.push(p.parse_meta(str)); }
 		metas.each {|m| m.separate_first!}
@@ -182,7 +184,7 @@ class Learner
 	end
 
 	def generalize()
-		sc    = SpaceConf.new
+		sc    = SpaceConf.new(@type)
 		sc.min_by_type.clear();
 		sc.max_by_type.clear();
 
@@ -194,9 +196,17 @@ class Learner
 		
 		# generalization of upper bound
 		@data_min.each do |info|
-			ident = [TypeData.type_by_value(info["prev"]), TypeData.type_by_value(info["next"])]
-			sum  [ident] += info["delta"];
-			count[ident] += 1;
+			t1 = TypeData.type_by_value(info["prev"] )
+			while t1 != nil do  
+				t2 = TypeData.type_by_value(info["next"] )
+				while t2 != nil do
+					ident = [t1, t2]
+					sum  [ident] += info["delta"];
+					count[ident] += 1;
+					t2 = TypeHierarchy.get_parent(t2, @type)
+				end
+				t1 = TypeHierarchy.get_parent(t1, @type)
+			end
 		end
 
 		p sum
@@ -208,7 +218,7 @@ class Learner
 
 		sc.max_by_type.default = [];
 		@data_max.each do |info|
-			ident = [TypeData.type_by_value(info["prev"]), TypeData.type_by_value(info["next"])]
+			ident = [TypeData.type_by_value(info["prev"], @type), TypeData.type_by_value(info["next"], @type)]
 			sc.max_by_type[ident] += [[info["delta"], info["params"]]];
 		end
 

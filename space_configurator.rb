@@ -25,7 +25,8 @@ class SpaceConf
 
 	attr_accessor :min_by_type, :max_by_type
 
-	def initialize
+	def initialize(type)
+		@type = type;
 		@min_by_type = {};
 		@max_by_type = {};
 
@@ -36,9 +37,26 @@ class SpaceConf
 
 	def get_min(token1, token2)
 		return 0 if token1 == nil || token2 == nil
-		ret = @min_by_type[[token1.type, token2.type]]
+		ret = get_min_by_type(token1.type, token2.type);
+		ret = [token1.min_follow_space, token2.min_previous_space].max if ret == nil;
+		return ret;
+	end
+
+	def get_min_by_type(type1, type2)
+		ret = @min_by_type[[type1, type2]]
 		if ret == nil
-			ret = [token1.min_follow_space, token2.min_previous_space].max
+			p1 = TypeHierarchy.get_parent(type1, @type)
+			p2 = TypeHierarchy.get_parent(type2, @type)
+			if(p1 == nil and p2 == nil) then
+				return nil;
+			end
+			if(p1 == nil) then
+				return get_min_by_type(type1, p2)
+			end
+			if(p2 == nil) then
+				return get_min_by_type(p1, type2)
+			end
+			return get_min_by_type(p1, p2);
 		end
 		return ret;
 	end
@@ -62,13 +80,13 @@ class SpaceConf
 		#File.delete("max_by_type.dat");
 		#File.delete("min_by_type.dat");
 
-		IO.write("min_by_type.dat", Marshal.dump(@min_by_type));
-		IO.write("max_by_type.dat", Marshal.dump(@max_by_type));
+		IO.write("min_by_type_"+@type.to_s+".dat", Marshal.dump(@min_by_type));
+		IO.write("max_by_type_"+@type.to_s+".dat", Marshal.dump(@max_by_type));
 	end
 
 	def load()
-		@min_by_type = Marshal.load( IO.read( "min_by_type.dat" ) ) if  File.exists?("min_by_type.dat");
-		@max_by_type = Marshal.load( IO.read( "max_by_type.dat" ) ) if  File.exists?("max_by_type.dat");
+		@min_by_type = Marshal.load( IO.read( "min_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("min_by_type_"+@type.to_s+".dat");
+		@max_by_type = Marshal.load( IO.read( "max_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("max_by_type_"+@type.to_s+".dat");
 	end
 
 	def to_s()
