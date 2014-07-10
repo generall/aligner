@@ -111,10 +111,10 @@ To
 ```
 switch (state)                                
 {
-    case State.QLD:city = "Brisbane";break;
-    case State.WA :city = "Perth"   ;break;
-    case State.NSW:city = "Sydney"  ;break;
-    default       :city = "???"     ;break;
+    case State.QLD:city = "Brisbane"; break;
+    case State.WA :city = "Perth"   ; break;
+    case State.NSW:city = "Sydney"  ; break;
+    default       :city = "???"     ; break;
 }                                            
 ```
 
