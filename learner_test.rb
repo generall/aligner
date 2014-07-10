@@ -30,6 +30,7 @@ s2.push "if(i != matrix->y_from)"
 s2.push "*ymass = Ysum / TotalMass;"
 s2.push "Ysum += j;"
 s2.push "FILE *f = fopen(fname, \"r\");"
+s2.push "case State.QLD:city = \"Brisbane\"; break;"
 
 #s2.push "@@types_inheritance[:punctuation] = spchar;"
 #s2.push "case State.QLD : city = \"Brisbane\"; break;"
