@@ -4,7 +4,11 @@
 		"context": [{"key": "selector", "operator": "equal", "operand": "source.c++,source.c"}]
 	},
 	{
+		"keys": ["ctrl+k","ctrl+a"], "command": "aligner", "args": {"lang": "java"},
+		"context": [{"key": "selector", "operator": "equal", "operand": "source.java"}]
+	},
+	{
 		"keys": ["ctrl+k","ctrl+a"], "command": "aligner", "args": {"lang": "def"},
-		"context": [{"key": "selector", "operator": "not_equal", "operand": "source.c++,source.c"}]
+		"context": [{"key": "selector", "operator": "not_equal", "operand": "source.c++,source.c,source.java"}]
 	}
 ]

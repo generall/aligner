@@ -4,6 +4,8 @@ type = :default;
 case ARGV[0]
 when "C99"
 	type = :C99;
+when "java"
+	type = :java;
 end
 
 
@@ -18,7 +20,11 @@ learner =  Learner.new(type)
 
 s2 = []
 
-#s2.push "info[\"delta\"] = (tokens1[pair[0]].str_index - tokens2[pair[1]].str_index).abs;"
+
+############################
+# Insert training data here.
+############################
+
 s2.push "class.method = {1, 2, 4, 5};"
 s2.push "int y_from;"
 s2.push "extern void noize_delete(struct Pixel **matrix, int x, int y);"
@@ -32,9 +38,10 @@ s2.push "Ysum += j;"
 s2.push "FILE *f = fopen(fname, \"r\");"
 s2.push "case State.QLD:city = \"Brisbane\"; break;"
 
-#s2.push "@@types_inheritance[:punctuation] = spchar;"
-#s2.push "case State.QLD : city = \"Brisbane\"; break;"
-#s2.push "Form2.Image1.canvas.MoveTo(74, 230); Form2.Image1.canvas.LineTo(230, 230);"
+############################
+#
+############################
+
 
 s2.each do |str|
 	learner.extract_min_space_data(str);
