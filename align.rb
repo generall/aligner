@@ -14,8 +14,9 @@ end
 
 
 def test_aligment(input_strings, type)
-
-	p = LR_parser.new
+	p "Lang: " + type.to_s
+	
+	p = LR_parser.new(type)
 	metas  = []
 	input_strings.each { |str| metas.push(p.parse_meta(str)); }
 	metas.each {|m| m.separate_first!}

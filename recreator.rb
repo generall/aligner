@@ -58,8 +58,9 @@ class Recreator
 			else
 				min_spaces = @sc.get_min(prev_min, token)
 				if @Debug then
-					p "from ", prev_min.type
-					p "to", token.type
+					p "debug:"
+					p "from ", prev_min
+					p "to", token
 					p min_spaces
 				end
 				res_str += " " * min_spaces;
@@ -110,7 +111,9 @@ class Recreator
 					res_strings[line_index] += get_string_from_meta(t_token);
 					@prev_tokens[line_index]  = t_token.get_last_token;
 				end
-				rescue
+				rescue Exception => e
+					p e
+					p e.backtrace
 					p "Exceprion: "
 					p "line_index: " + line_index.to_s
 					p "token_index: " + indexes[line_index].to_s

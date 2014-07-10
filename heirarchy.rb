@@ -24,27 +24,24 @@ class TypeHierarchy
 
 	@@types_inheritance[:C99] = {}
 
-	@@types_inheritance[:C99][:float ] = :id ;
-	@@types_inheritance[:C99][:ptr   ] = :id ;
-	@@types_inheritance[:C99][:define] = :id ;
-
-	@@types_inheritance[:C99][:delim ] = :spchar ;
-	@@types_inheritance[:C99][:comma ] = :spchar ;
-	@@types_inheritance[:C99][:dpoint] = :spchar ;
-
-	@@types_inheritance[:C99][:assigment] = :dcmp   ;
-	@@types_inheritance[:C99][:compare  ] = :dcmp   ;
-	@@types_inheritance[:C99][:logical  ] = :dcmp   ;
-	@@types_inheritance[:C99][:dcmp     ] = :spchar ;
-
-	@@types_inheritance[:C99][:obracket] = :bracket ;
-	@@types_inheritance[:C99][:cbracket] = :bracket ;
-	@@types_inheritance[:C99][:bracket ] = :spchar  ;
-	
-	@@types_inheritance[:C99][:uoperator] = :operator ;
+	@@types_inheritance[:C99][:ptr      ] = :id ;
+	@@types_inheritance[:C99][:delim    ] = :spchar   ;
+	@@types_inheritance[:C99][:comma    ] = :spchar   ;
+	@@types_inheritance[:C99][:dpoint   ] = :spchar   ;
+	@@types_inheritance[:C99][:assigment] = :dcmp ;
+	@@types_inheritance[:C99][:compare  ] = :dcmp ;
+	@@types_inheritance[:C99][:logical  ] = :dcmp ;
+	@@types_inheritance[:C99][:shift    ] = :dcmp ;
+	@@types_inheritance[:C99][:dcmp     ] = :spchar   ;
+	@@types_inheritance[:C99][:obracket ] = :bracket  ;
+	@@types_inheritance[:C99][:cbracket ] = :bracket  ;
+	@@types_inheritance[:C99][:bracket  ] = :spchar   ;
+	@@types_inheritance[:C99][:postfix  ] = :spchar   ;
+	@@types_inheritance[:C99][:increm   ] = :spchar   ;
+	@@types_inheritance[:C99][:uoperator] = :boperator;
 	@@types_inheritance[:C99][:boperator] = :operator ;
-	@@types_inheritance[:C99][:operator ] = :spchar;
-	@@types_inheritance[:C99].default = nil;
+	@@types_inheritance[:C99][:operator ] = :spchar   ;
+	@@types_inheritance[:C99].default     = nil       ;
 
 
 	def self.inheritance(type)

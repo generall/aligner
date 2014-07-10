@@ -1,5 +1,11 @@
 require "./align.rb"
 
+type = :default;
+case ARGV[0]
+when "C99"
+	type = :C99;
+end
+
 cmd = STDIN.gets
 
 n = cmd.to_i;
@@ -9,7 +15,7 @@ for i in 0..n-1 do
 	a.push(line)
 end
 
-lines = align(a)
+lines = align(a, type)
 
 
 for i in 0..n-1 do   

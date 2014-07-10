@@ -46,7 +46,7 @@ class TypeData
 		[/^\.[[:word:]]+/      , :method      , true , 0.1, 0, 1],  # method
 		[/^[\.\,\;]/           , :punctuation , true , 0.1, 0, 1],  # punctuation
 		[/^[\{\[\(\)\]\}]/     , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
-		[/^[\=\+\-\*\&\^\~]/   , :operator    , true , 0.1, 0, 1],  # bracket_regexp
+		[/^[\=\+\-\*\&\^\~\|]/ , :operator    , true , 0.1, 0, 1],  # bracket_regexp
 		[/^\:[[:word:]]+/      , :symbol      , true , 0.1, 0, 1],  # symbol
 		[/^[^\w\s][[:word:]]+/ , :id          , true , 0.1, 0, 1],  # id
 		[/^\@[[:word:]]+/      , :id          , true , 0.1, 0, 1],  # lvar_regexp
@@ -64,9 +64,10 @@ class TypeData
 		[/^\/\/.*/                          , :comment     , true , 0.1, 1, 0],  # comment
 		[/^\/\*.*?\*\//                     , :comment     , true , 0.1, 1, 0],  # comment
 		[/^\/\*.*/                          , :comment     , true , 0.1, 1, 0],  # comment
-		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/  , :float       , true , 0.1, 0, 1],  # float
+		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/   , :float       , true , 0.1, 0, 1],  # float
 		[/^([-+]?\d*\.?\d+)/                , :float       , true , 0.1, 0, 1],  # float
-		[/^\*[[:word:]]+/                   , :ptr         , true , 0.1, 1, 0],  # define
+		[/^\*+[[:word:]]+/                  , :ptr         , true , 0.1, 1, 0],  # define
+		[/^\&+[[:word:]]+/                  , :ptr         , true , 0.1, 1, 0],  # define
 		[/^\#[[:word:]]+/                   , :define      , true , 0.1, 1, 0],  # pointer
 		[/^[\;]/                            , :delim       , true , 0.1, 0, 1],  # end of instruction
 		[/^[\,]/                            , :comma       , true , 0.1, 0, 1],  # comma
@@ -76,10 +77,10 @@ class TypeData
 		[/^(<<|>>)/                         , :shift       , true , 0.1, 1, 1],  # shift
 		[/^(>|<|==|<=|>=|!=)/               , :compare     , true , 0.1, 1, 1],  # compare
 		[/^(\|\||\&\&)/                     , :logical     , true , 0.1, 1, 1],  # logical
-		[/^(\.|->)/                         , :postfix     , true , 0.1, 0, 0],  # postfix
-		[/^(--|\+\+)/                       , :increm      , true , 0.1, 0, 0],  # increm
+		[/^(\.|\->)/                        , :postfix     , true , 0.1, 0, 0],  # postfix
+		[/^(\-\-|\+\+)/                     , :increm      , true , 0.1, 0, 0],  # increm
 		[/^[\&\~\!]/                        , :uoperator   , true , 0.1, 0, 1],  # unary operator
-		[/^[\+\-\*\%]/                      , :boperator   , true , 0.1, 0, 1],  # binary operator
+		[/^[\+\-\*\%\/]/                    , :boperator   , true , 0.1, 0, 1],  # binary operator
 		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
 		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
 		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
@@ -186,7 +187,7 @@ class TokenTemplate
 	end
 
 	def to_s()
-		return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
+		return "[ t=" + @type.to_s + " v=" + @value.to_s + "] / " +  @except.to_s
 	end
 
 	def inspect()

@@ -311,7 +311,7 @@ def tree_to_metaexpression(tree, meta)
 end
 
 class LR_parser
-	def initialize(type = :default)
+	def initialize(type)
 		@Debug = true & false;
 
 		TokenTemplate.set_ltype type

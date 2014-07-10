@@ -19,10 +19,12 @@ input_strings = [];
 
 
 
-	input_strings.push("@@types_inheritance[:C99][:uoperator] = :operator;");
-	input_strings.push("@@types_inheritance[:C99][:boperator] = :operator;");
+#input_strings.push("auto string * ololo");
+#input_strings.push("string & strong");
 
-
+input_strings.push("matrix[i][j].R =255;");
+input_strings.push("matrix[i][j].G =255;");
+input_strings.push("matrix[i][j].B =255;");
 
 
 #input_strings.push("index = 0;");
