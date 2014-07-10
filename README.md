@@ -71,6 +71,8 @@ When using the grammar, the program causes the alignment of the second type,
 in spite of the fact that different function arguments are similar in spelling.
 Such behavior is, of course, leads to improvement of readability.
 
+To maximize the quality for each language you need to write its own grammar.
+
 ## Examples of work
 
 From
@@ -109,10 +111,10 @@ To
 ```
 switch (state)                                
 {
-    case    State.QLD : city = "Brisbane"; break;
-    case    State.WA  : city = "Perth"   ; break;
-    case    State.NSW : city = "Sydney"  ; break;
-    default           : city = "???"     ; break;
+    case State.QLD:city = "Brisbane";break;
+    case State.WA :city = "Perth"   ;break;
+    case State.NSW:city = "Sydney"  ;break;
+    default       :city = "???"     ;break;
 }                                            
 ```
 
@@ -125,9 +127,9 @@ The resulting information is aggregated and used in the future for proper indent
 
 There are 2 types of training: minimum and maximum indents.
 
-Training starts with the command `ruby learner_test.rb`.
+Training starts with the command `ruby learner_test.rb <lang_type>`.
 It is not required by default.
-The resulting information is stored in files `max_by_type.dat` and `min_by_type.dat`.
+The resulting information is stored in files `max_by_type_<lang_type>.dat` and `min_by_type_<lang_type>.dat`.
 
 ##Installation
 
@@ -154,5 +156,7 @@ Here is a list of things that have to be improved.
 * Customization for different languages.
 	* extended grammar
 	* extended set of types of token
+    * Customized languages:
+        * C
 * Extended machine learning for alignment decision
 * to be continued...
