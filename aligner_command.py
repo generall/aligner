@@ -3,10 +3,10 @@ from subprocess import Popen, PIPE, STDOUT
 import os
 
 class AlignerCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
+	def run(self, edit, lang='default'):
 		#self.view.insert(edit, 0, "HW")
 		lines = []
-		
+		print(lang)
 		#path = "/home/generall/Dropbox/code/Ruby/aligner"
 		path = sublime.packages_path() + "/aligner"
 		prev_dir = os.getcwd();
@@ -18,7 +18,7 @@ class AlignerCommand(sublime_plugin.TextCommand):
 			lines = txt_lines.split("\n");
 
 
-			slave = Popen(['ruby', path + '/pipe_launch.rb'], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
+			slave = Popen(['ruby', path + '/pipe_launch.rb', lang], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
 			slave.stdin.write(bytes(str(len(lines)) + "\n" , "UTF-8"));
 			slave.stdin.write(bytes(txt_lines       + "\n" , "UTF-8"));
 
