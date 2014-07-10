@@ -4,6 +4,8 @@ type = :default;
 case ARGV[0]
 when "C99"
 	type = :C99;
+when "java"
+	type = :java;
 end
 
 cmd = STDIN.gets

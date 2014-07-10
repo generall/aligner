@@ -80,13 +80,13 @@ class SpaceConf
 		#File.delete("max_by_type.dat");
 		#File.delete("min_by_type.dat");
 
-		IO.write("min_by_type_"+@type.to_s+".dat", Marshal.dump(@min_by_type));
-		IO.write("max_by_type_"+@type.to_s+".dat", Marshal.dump(@max_by_type));
+		IO.write("learning_data/min_by_type_"+@type.to_s+".dat", Marshal.dump(@min_by_type));
+		IO.write("learning_data/max_by_type_"+@type.to_s+".dat", Marshal.dump(@max_by_type));
 	end
 
 	def load()
-		@min_by_type = Marshal.load( IO.read( "min_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("min_by_type_"+@type.to_s+".dat");
-		@max_by_type = Marshal.load( IO.read( "max_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("max_by_type_"+@type.to_s+".dat");
+		@min_by_type = Marshal.load( IO.read( "learning_data/min_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("learning_data/min_by_type_"+@type.to_s+".dat");
+		@max_by_type = Marshal.load( IO.read( "learning_data/max_by_type_"+@type.to_s+".dat" ) ) if  File.exists?("learning_data/max_by_type_"+@type.to_s+".dat");
 	end
 
 	def to_s()

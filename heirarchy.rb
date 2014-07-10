@@ -43,6 +43,26 @@ class TypeHierarchy
 	@@types_inheritance[:C99][:operator ] = :spchar   ;
 	@@types_inheritance[:C99].default     = nil       ;
 
+	@@types_inheritance[:java] = {}
+
+	@@types_inheritance[:java][:delim    ] = :spchar   ;
+	@@types_inheritance[:java][:comma    ] = :spchar   ;
+	@@types_inheritance[:java][:dpoint   ] = :spchar   ;
+	@@types_inheritance[:java][:assigment] = :dcmp ;
+	@@types_inheritance[:java][:compare  ] = :dcmp ;
+	@@types_inheritance[:java][:logical  ] = :dcmp ;
+	@@types_inheritance[:java][:shift    ] = :dcmp ;
+	@@types_inheritance[:java][:dcmp     ] = :spchar   ;
+	@@types_inheritance[:java][:obracket ] = :bracket  ;
+	@@types_inheritance[:java][:cbracket ] = :bracket  ;
+	@@types_inheritance[:java][:bracket  ] = :spchar   ;
+	@@types_inheritance[:java][:postfix  ] = :spchar   ;
+	@@types_inheritance[:java][:increm   ] = :spchar   ;
+	@@types_inheritance[:java][:uoperator] = :boperator;
+	@@types_inheritance[:java][:boperator] = :operator ;
+	@@types_inheritance[:java][:operator ] = :spchar   ;
+	@@types_inheritance[:java].default     = nil       ;
+
 
 	def self.inheritance(type)
 		return @@types_inheritance[type]

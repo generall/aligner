@@ -38,22 +38,18 @@ class TypeData
 	@@regexp_array[:default] = 
 	[
 		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
-		[/^'(\\.|[^'])*'/      , :quote       , true , 0.1, 0, 1],  # quote1_regexp
-		[/^"(\\.|[^"])*"/      , :quote       , true , 0.1, 0, 1],  # string_regexp
-		[/^\/(\\.|[^\/])*\//   , :regexp      , true , 0.2, 0, 1],  # regexp_regexp
-		[/^\d+\.\d+/           , :float       , true , 0.1, 0, 1],  # float
-		[/^\d+/                , :int         , true , 0.1, 0, 1],  # integer
-		[/^\.[[:word:]]+/      , :method      , true , 0.1, 0, 1],  # method
-		[/^[\.\,\;]/           , :punctuation , true , 0.1, 0, 1],  # punctuation
-		[/^[\{\[\(\)\]\}]/     , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
-		[/^[\=\+\-\*\&\^\~\|]/ , :operator    , true , 0.1, 0, 1],  # bracket_regexp
-		[/^\:[[:word:]]+/      , :symbol      , true , 0.1, 0, 1],  # symbol
-		[/^[^\w\s][[:word:]]+/ , :id          , true , 0.1, 0, 1],  # id
-		[/^\@[[:word:]]+/      , :id          , true , 0.1, 0, 1],  # lvar_regexp
-		[/^\@\@[[:word:]]+/    , :id          , true , 0.1, 0, 1],  # gvar_regexp
-		[/^[[:word:]]+/        , :id          , true , 0.1, 0, 1],  # var_regexp
-		[/^[^\w\s]/            , :spchar      , true , 0  , 0, 1],  # spchar_regexp
-		[/^\s/                 , :space       , false, 0  , 0, 1]   # space_regexp
+		[/^'(\\.|[^'])*'/                 , :quote       , true , 0.1, 0, 1],  # quote1_regexp
+		[/^"(\\.|[^"])*"/                 , :quote       , true , 0.1, 0, 1],  # string_regexp
+		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/ , :float       , true , 0.1, 0, 1],  # float
+		[/^([-+]?\d*\.?\d+)/              , :float       , true , 0.1, 0, 1],  # float
+		[/^\d+/                           , :int         , true , 0.1, 0, 1],  # integer
+		[/^[\.\,\;]/                      , :punctuation , true , 0.1, 0, 1],  # punctuation
+		[/^[\{\[\(\)\]\}]/                , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
+		[/^[\=\+\-\*\&\^\~\|]/            , :operator    , true , 0.1, 0, 1],  # bracket_regexp
+		[/^[^\w\s][[:word:]]+/            , :id          , true , 0.1, 0, 1],  # id
+		[/^[[:word:]]+/                   , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/                       , :spchar      , true , 0  , 0, 1],  # spchar_regexp
+		[/^\s/                            , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
 	@@regexp_array[:C99] =
@@ -88,6 +84,35 @@ class TypeData
 		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
+
+	@@regexp_array[:java] = 
+	[
+		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
+		[/^'(\\.|[^'])*'/                   , :quote       , true , 0.1, 0, 1],  # quote1_regexp
+		[/^"(\\.|[^"])*"/                   , :quote       , true , 0.1, 0, 1],  # string_regexp
+		[/^\/\/.*/                          , :comment     , true , 0.1, 1, 0],  # comment
+		[/^\/\*.*?\*\//                     , :comment     , true , 0.1, 1, 0],  # comment
+		[/^\/\*.*/                          , :comment     , true , 0.1, 1, 0],  # comment
+		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/   , :float       , true , 0.1, 0, 1],  # float
+		[/^([-+]?\d*\.?\d+)/                , :float       , true , 0.1, 0, 1],  # float
+		[/^[\;]/                            , :delim       , true , 0.1, 0, 1],  # end of instruction
+		[/^[\,]/                            , :comma       , true , 0.1, 0, 1],  # comma
+		[/^[\:]/                            , :dpoint      , true , 0.1, 0, 1],  # dpoint
+		[/^([\*\/\%\+\-\&\^\|])?\=/         , :assigment   , true , 0.1, 1, 1],  # assigment
+		[/^(<<|>>)\=/                       , :assigment   , true , 0.1, 1, 1],  # assigment
+		[/^(<<|>>)/                         , :shift       , true , 0.1, 1, 1],  # shift
+		[/^(>|<|==|<=|>=|!=)/               , :compare     , true , 0.1, 1, 1],  # compare
+		[/^(\|\||\&\&)/                     , :logical     , true , 0.1, 1, 1],  # logical
+		[/^(\.|\->)/                        , :postfix     , true , 0.1, 0, 0],  # postfix
+		[/^(\-\-|\+\+)/                     , :increm      , true , 0.1, 0, 0],  # increm
+		[/^[\&\~\!]/                        , :uoperator   , true , 0.1, 0, 1],  # unary operator
+		[/^[\+\-\*\%\/]/                    , :boperator   , true , 0.1, 0, 1],  # binary operator
+		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
+		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
+		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/            				, :spchar      , true , 0  , 1, 1],  # spchar_regexp
+		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
+	]
 
 	def self.type_by_value(value)
 		@@regexp_array[@@type].each do |regexp|

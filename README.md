@@ -158,5 +158,6 @@ Here is a list of things that have to be improved.
 	* extended set of types of token
     * Customized languages:
         * C
+        * java
 * Extended machine learning for alignment decision
 * to be continued...
