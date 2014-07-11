@@ -133,7 +133,7 @@ The resulting information is stored in files `max_by_type_<lang_type>.dat` and `
 
 ##Installation
 
-First of all, make sure that your system has a ruby interpreter.
+First of all, make sure that your system has a ruby interpreter `ver. >= 1.9`.
 In Ubuntu you can use following command:
 ```
 sudo apt-get install ruby
