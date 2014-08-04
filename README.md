@@ -161,3 +161,17 @@ Here is a list of things that have to be improved.
         * java
 * Extended machine learning for alignment decision
 * to be continued...
+
+## The expected course of action to add the grammar.
+
+In file `staff.rb` add new regexp array by following pattern:
+```
+@@regexp_array[:new_grammar_name] =
+[
+		# [<reg_exp>, <tag>, <is_necessary>, <min_simularity>, <min_previous_space>, <min_follow_space> ]
+		[/^'(\\.|[^'])*'/                 , :quote       , true , 0.1, 0, 1], 
+		...
+] 
+```
+
+Add BNF to file `grammar.rb`.
