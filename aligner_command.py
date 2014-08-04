@@ -17,6 +17,9 @@ class AlignerCommand(sublime_plugin.TextCommand):
 			txt_lines    = self.view.substr(lines_region);
 			lines = txt_lines.split("\n");
 
+			for l in lines:
+				print(l)
+
 
 			slave = Popen(['ruby', path + '/pipe_launch.rb', lang], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
 			slave.stdin.write(bytes(str(len(lines)) + "\n" , "UTF-8"));
@@ -29,7 +32,7 @@ class AlignerCommand(sublime_plugin.TextCommand):
 			        break
 			    # read one line, remove newline chars and trailing spaces:
 			    line = slave.stdout.readline().rstrip()
-			    #print 'line:', line
+			    #print('line:', line)
 			    result.append(line.decode("utf-8"))
 			responce = '\n'.join(result)
 			responce = responce.rstrip('\n')
