@@ -37,6 +37,7 @@ s2.push "*ymass = Ysum / TotalMass;"
 s2.push "Ysum += j;"
 s2.push "FILE *f = fopen(fname, \"r\");"
 s2.push "case State.QLD:city = \"Brisbane\"; break;"
+s2.push "matrix[i][j - 1],"
 
 ############################
 #

@@ -29,22 +29,22 @@ def test_aligment(input_strings, type)
 		pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
 	end
 
-	p "pairs"
-	pairs_array.each{|x| p x}
+	#p "pairs"
+	#pairs_array.each{|x| p x}
 
 	i = 0;
-	p "simularity"
+	#p "simularity"
 	pairs_array.each do |pairs|
 		p matcher.get_percent_simularity([metas[i], metas[i + 1]] , pairs)
 		i += 1;
 	end
 	r = Recreator.new(type)
-	r.set_debug true;
+	r.set_debug false;
 	chains = r.generate_chains(pairs_array);
-	p "chains:"
-	chains.each{|ch| p ch}
+	#p "chains:"
+	#chains.each{|ch| p ch}
 
-	p "reconstruction"
+	#p "reconstruction"
 	lines = r.multiline_reconstruction(metas, chains)
 	return lines
 end
