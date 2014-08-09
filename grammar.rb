@@ -35,8 +35,8 @@ when :default
 	@@grammar.add_rule(:t, bracket5);
 	@@grammar.add_rule(:t, bracket6);
 	
-	@@grammar.add_rule(:t, [TokenTemplate.new(:quote                               )], [:reducible]);
-	@@grammar.add_rule(:t, [TokenTemplate.new(:id,['[','{','(',']','}',')','='])], [:reducible]);
+	@@grammar.add_rule(:t, [TokenTemplate.new(:quote)], [:reducible]);
+	@@grammar.add_rule(:t, [TokenTemplate.new(:id   )], [:reducible]);
 
 when :C99
 	@@grammar.add_rule(:main, [:expr    ], [:reducible]);

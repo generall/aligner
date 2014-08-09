@@ -1,5 +1,7 @@
 
 require "./staff.rb"
+require 'colorize'  if ARGV.member?("debug")
+
 
 class MetaExpression
 	attr_accessor :value, :parent, :first;
@@ -80,7 +82,7 @@ class MetaExpression
 	end
 
 	def to_s
-		return value.to_s
+		return @value.to_s
 	end
 
 end

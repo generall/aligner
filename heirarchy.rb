@@ -3,21 +3,27 @@ class TypeHierarchy
 
 	@@types_inheritance = {};
 
-	@@types_inheritance[:default] = {}
+	@@types_inheritance[:default1] = {}
+	@@types_inheritance[:default1][:space ] = nil;
+	@@types_inheritance[:default1][:quote ] = nil;
+	@@types_inheritance[:default1][:regexp] = nil;
+	@@types_inheritance[:default1][:id    ] = nil;
+	@@types_inheritance[:default1][:spchar] = nil;
+	@@types_inheritance[:default1][:int   ] = nil;
+	@@types_inheritance[:default1][:punctuation] = :spchar;
+	@@types_inheritance[:default1][:float      ] = :int   ;
+	@@types_inheritance[:default1][:int        ] = :id    ;
+	@@types_inheritance[:default1][:method     ] = :id    ;
+	@@types_inheritance[:default1][:symbol     ] = :id    ;
+	@@types_inheritance[:default1][:bracket    ] = :spchar;
+	@@types_inheritance[:default1][:operator   ] = :spchar;
+	@@types_inheritance[:default1].default = nil;
 
-	@@types_inheritance[:default][:space ] = nil;
-	@@types_inheritance[:default][:quote ] = nil;
-	@@types_inheritance[:default][:regexp] = nil;
-	@@types_inheritance[:default][:id    ] = nil;
-	@@types_inheritance[:default][:spchar] = nil;
-	@@types_inheritance[:default][:int   ] = nil;
-	@@types_inheritance[:default][:punctuation] = :spchar;
-	@@types_inheritance[:default][:float      ] = :int   ;
-	@@types_inheritance[:default][:int        ] = :id    ;
-	@@types_inheritance[:default][:method     ] = :id    ;
-	@@types_inheritance[:default][:symbol     ] = :id    ;
-	@@types_inheritance[:default][:bracket    ] = :spchar;
-	@@types_inheritance[:default][:operator   ] = :spchar;
+	@@types_inheritance[:default] = {}
+	@@types_inheritance[:default][:space  ] = nil;
+	@@types_inheritance[:default][:quote  ] = :id;
+	@@types_inheritance[:default][:bracket] = :id;
+	@@types_inheritance[:default][:id     ] = nil;
 
 	@@types_inheritance[:default].default = nil;
 

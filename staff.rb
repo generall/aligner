@@ -1,4 +1,5 @@
 require './heirarchy.rb'
+require 'colorize'  if ARGV.member?("debug")
 
 
 def levenshtein(first, second)
@@ -186,7 +187,7 @@ class Token
 	end
 
 	def to_s()
-		return "t"+@tkn_index.to_s + ":"+@value.to_s+""
+		return "t"+@tkn_index.to_s + ":"+@value.to_s.red+""
 		#return "[ t=" + @type.to_s + " v=" + @value.to_s + "]"
 	end
 end
@@ -227,7 +228,7 @@ class TokenTemplate
 	end
 
 	def to_s()
-		return "[ t=" + @type.to_s + " v=" + @value.to_s + "] / " +  @except.to_s
+		return "[ t=" + @type.to_s.yellow + " v=" + @value.to_s.green + "] / " +  @except.to_s.red
 	end
 
 	def inspect()
