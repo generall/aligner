@@ -29,10 +29,9 @@ input_strings = [];
 #input_strings.push("matrix[i][j].B =255;");
 
 
-input_strings.push("matrix[i - 1][j    ],");
-input_strings.push("matrix[i    ][j - 1],");
+input_strings.push("matrix[i - 1][j],");
+input_strings.push("matrix[i]j - 1],");
 input_strings.push("matrix[i - 1][j - 1],");
-
 
 #input_strings.push("[/^'(\\.|[^'])*'/                 , :quote       , true , 0.1, 0, 1],  # quote1_regexp");
 #input_strings.push("[/^\"(\\.|[^\"])*\"/                 , :quote       , true , 0.1, 0, 1],  # string_regexp");
