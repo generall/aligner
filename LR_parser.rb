@@ -2,6 +2,7 @@ require './staff.rb'
 require './fsm.rb'
 require './expression.rb'
 
+require 'colorize'  if ARGV.member?("debug")
 
 
 class Grammar
@@ -149,8 +150,11 @@ def generate_FSM(grammar, axiom)
 		add_next_vertex(grammar, fsm, rule, vertex_by_set, 0);
 	end
 
-	vertex_by_set.each{|x| p x} if @Debug;
-
+	if @Debug
+		vertex_by_set.each{|x| 
+			p x
+		} 
+	end
 	return fsm;
 end
 
@@ -182,7 +186,7 @@ class Nonterm
 	end
 
 	def to_s()
-		return ":~"+@symbol.to_s
+		return (":~"+@symbol.to_s).blue
 	end
 
 	def print_tree(space = 0)
@@ -243,13 +247,13 @@ def parse(fsm, expr, grammar)
 		end
 
 		if @Debug then
-			p "is_acceptable:   " + is_acceptable     .to_s;
-			p "signal:          " + signal            .to_s;
-			p "expr.last:       " + expr.last         .to_s;
-			p "expr:            " + expr              .to_s;
-			p "state_stack:     " + state_stack       .to_s;
-			p "current_state    " + fsm.current_vertex.to_s;
-			p "processed:       " + processed         .to_s;
+			puts "is_acceptable:   " + is_acceptable     .to_s;
+			puts "signal:          " + signal            .to_s;
+			puts "expr.last:       " + expr.last         .to_s;
+			puts "expr:            " + expr              .to_s;
+			puts "state_stack:     " + state_stack       .to_s;
+			puts "current_state    " + fsm.current_vertex.to_s;
+			puts "processed:       " + processed         .to_s;
 		end
 		if is_acceptable then
 			# edge exists. Symbol accepted
@@ -266,8 +270,8 @@ def parse(fsm, expr, grammar)
 				r_s           = rule.size # Rule_Size
 
 				if @Debug then
-					p "apply rule:      " + to_production.to_s + "->" + rule.to_s;
-					p "processed[top]:  " + to_production.to_s + "->" + processed[-r_s..-1] .to_s;
+					puts "apply rule:      " + to_production.to_s + "->" + rule.to_s;
+					puts "processed[top]:  " + to_production.to_s + "->" + processed[-r_s..-1] .to_s;
 				end
 
 				is_appropriate = true;
@@ -312,7 +316,7 @@ end
 
 class LR_parser
 	def initialize(type)
-		@Debug = true & false;
+		@Debug = ARGV.member?("debug");
 
 		TokenTemplate.set_ltype type
 
@@ -331,8 +335,10 @@ class LR_parser
 		if @Debug then
 			@grammar_machina.vertex_set.each{
 				|x| 
-				print x; print " --- ";
-				print @grammar_machina.get_value(x[0]);
+				print x[0]  
+				puts ": ";
+				x[1].each{|y| puts "  " + y[0].to_s + " => " + y[1].to_s}
+				#print @grammar_machina.get_value(x[0]);
 				print "\n"
 			} 
 
