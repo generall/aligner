@@ -160,6 +160,7 @@ Here is a list of things that have to be improved.
         * C
         * java
 * Extended machine learning for alignment decision
+	* experiments with Markov chain learing
 * to be continued...
 
 ## The expected course of action to add the grammar.
