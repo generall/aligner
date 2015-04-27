@@ -1,5 +1,7 @@
 require "./align.rb"
 
+DEBUG_pipe = false
+
 type = :default;
 case ARGV[0]
 when "C99"
