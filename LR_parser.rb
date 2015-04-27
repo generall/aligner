@@ -174,7 +174,7 @@ class Nonterm
 	end
 
 	def !=(other)
-		return not(self == other)
+		return !(self == other)
 	end
 
 	def inspect()

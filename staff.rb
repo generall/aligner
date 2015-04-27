@@ -46,8 +46,8 @@ class TypeData
 		[/^[\.\,\;]/                      , :punctuation , true , 0.1, 0, 1],  # punctuation
 		[/^[\{\[\(\)\]\}]/                , :bracket     , true , 0.1, 0, 1],  # bracket_regexp
 		[/^[\=\+\-\*\&\^\~\|]/            , :operator    , true , 0.1, 0, 1],  # bracket_regexp
-		[/^[^\w\s][[:word:]]+/            , :id          , true , 0.1, 0, 1],  # id
-		[/^[[:word:]]+/                   , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]\w+/                    , :id          , true , 0.1, 0, 1],  # id
+		[/^\w+/                           , :id          , true , 0.1, 0, 1],  # var_regexp
 		[/^[^\w\s]/                       , :spchar      , true , 0  , 0, 1],  # spchar_regexp
 		[/^\s/                            , :space       , false, 0  , 0, 1]   # space_regexp
 	]
@@ -62,9 +62,9 @@ class TypeData
 		[/^\/\*.*/                          , :comment     , true , 0.1, 1, 0],  # comment
 		[/^[-+]?\d*\.?\d+([eE][-+]?\d+)?/   , :float       , true , 0.1, 0, 1],  # float
 		[/^([-+]?\d*\.?\d+)/                , :float       , true , 0.1, 0, 1],  # float
-		[/^\*+[[:word:]]+/                  , :ptr         , true , 0.1, 1, 0],  # define
-		[/^\&+[[:word:]]+/                  , :ptr         , true , 0.1, 1, 0],  # define
-		[/^\#[[:word:]]+/                   , :define      , true , 0.1, 1, 0],  # pointer
+		[/^\*+\w+/                          , :ptr         , true , 0.1, 1, 0],  # define
+		[/^\&+\w+/                          , :ptr         , true , 0.1, 1, 0],  # define
+		[/^\#\w+/                           , :define      , true , 0.1, 1, 0],  # pointer
 		[/^[\;]/                            , :delim       , true , 0.1, 0, 1],  # end of instruction
 		[/^[\,]/                            , :comma       , true , 0.1, 0, 1],  # comma
 		[/^[\:]/                            , :dpoint      , true , 0.1, 0, 1],  # dpoint
@@ -79,9 +79,9 @@ class TypeData
 		[/^[\+\-\*\%\/]/                    , :boperator   , true , 0.1, 0, 1],  # binary operator
 		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
 		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
-		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
-		[/^[^\w\s]/            				, :spchar      , true , 0  , 1, 1],  # spchar_regexp
-		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
+		[/^\w+/                             , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/                         , :spchar      , true , 0  , 1, 1],  # spchar_regexp
+		[/^\s/                              , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
 
@@ -109,9 +109,9 @@ class TypeData
 		[/^[\+\-\*\%\/]/                    , :boperator   , true , 0.1, 0, 1],  # binary operator
 		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
 		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
-		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
-		[/^[^\w\s]/            				, :spchar      , true , 0  , 1, 1],  # spchar_regexp
-		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
+		[/^\w+/                             , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/                         , :spchar      , true , 0  , 1, 1],  # spchar_regexp
+		[/^\s/                              , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
 	def self.type_by_value(value)
