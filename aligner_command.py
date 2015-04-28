@@ -15,7 +15,7 @@ class AlignerCommand(sublime_plugin.TextCommand):
 		lines = []
 		log(lang)
 		#path = "/home/generall/Dropbox/code/Ruby/aligner"
-		path = sublime.packages_path() + "/aligner"
+		path = sublime.packages_path() + "/AutoAligner"
 		prev_dir = os.getcwd();
 		os.chdir(path)
 		
@@ -30,11 +30,8 @@ class AlignerCommand(sublime_plugin.TextCommand):
 
 			try:
 				slave = Popen(['ruby', path + '/pipe_launch.rb', lang], stdin=PIPE, stdout=PIPE, stderr=STDOUT)
-	
-				req_version = (2,7)
-				cur_version = (sys.version_info.major, sys.version_info.minor)
-	
-				if cur_version > req_version:
+				
+				if sys.version_info >= (3,):
 					slave.stdin.write(bytes(str(len(lines)) + "\n" , "UTF-8"));
 					slave.stdin.write(bytes(txt_lines       + "\n" , "UTF-8"));
 					slave.stdin.close()

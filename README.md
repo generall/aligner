@@ -143,7 +143,7 @@ To install the plugin, clone it to your Siblime Text 2/3 Package directory with 
 
 ```
 cd ~/.config/sublime-text-3/Packages
-git clone https://github.com/generall/aligner.git
+git clone https://github.com/generall/aligner.git AutoAligner
 ```
 
 Default hotkey for alignment is: `["ctrl+k","ctrl+a"]`.
