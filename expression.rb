@@ -1,6 +1,6 @@
 
 require "./staff.rb"
-require 'colorize'  if ARGV.member?("debug")
+require 'colorize'  if $DEBUG_project > 0
 
 
 class MetaExpression
@@ -25,7 +25,7 @@ class MetaExpression
 		@value.each do |token|
 			if token.class == Token then
 				print " "*n*4;
-				p token.value;
+				p token;
 			else
 				token.print_tree(n+1)
 			end

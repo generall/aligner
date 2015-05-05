@@ -2,8 +2,8 @@ require './staff.rb'
 require './fsm.rb'
 require './expression.rb'
 
-require 'colorize'  if ARGV.member?("debug")
-
+require 'colorize'  if $DEBUG_project > 0
+require 'pry' if $DEBUG_project > 0
 
 class Grammar
 
@@ -150,7 +150,7 @@ def generate_FSM(grammar, axiom)
 		add_next_vertex(grammar, fsm, rule, vertex_by_set, 0);
 	end
 
-	if @Debug
+	if @Debug >= 2
 		vertex_by_set.each{|x| 
 			p x
 		} 
@@ -160,7 +160,7 @@ end
 
 class Nonterm
 	def initialize(sym = nil, obj = nil, is_reducible = false)
-    	@Debug = true & false;
+    	@Debug = 0;
 		@symbol = sym;
 		@object = obj;
 		@is_reducible = is_reducible;
@@ -246,11 +246,11 @@ def parse(fsm, expr, grammar)
 			end
 		end
 
-		if @Debug then
-			puts "is_acceptable:   " + is_acceptable     .to_s;
-			puts "signal:          " + signal            .to_s;
-			puts "expr.last:       " + expr.last         .to_s;
+		if @Debug >= 2 then
 			puts "expr:            " + expr              .to_s;
+			puts "signal:          " + signal            .to_s;
+			puts "is_acceptable:   " + is_acceptable     .to_s;
+			puts "expr.last:       " + expr.last         .to_s;
 			puts "state_stack:     " + state_stack       .to_s;
 			puts "current_state    " + fsm.current_vertex.to_s;
 			puts "processed:       " + processed         .to_s;
@@ -269,9 +269,9 @@ def parse(fsm, expr, grammar)
 				to_production = fsm.get_value[0];
 				r_s           = rule.size # Rule_Size
 
-				if @Debug then
-					puts "apply rule:      " + to_production.to_s + "->" + rule.to_s;
-					puts "processed[top]:  " + to_production.to_s + "->" + processed[-r_s..-1] .to_s;
+				if @Debug >= 2 then
+					puts "apply rule:      " + to_production.to_s + " -> " + rule.to_s;
+					puts "processed[top]:  " + to_production.to_s + " -> " + processed[-r_s..-1] .to_s;
 				end
 
 				is_appropriate = true;
@@ -303,7 +303,7 @@ def parse(fsm, expr, grammar)
 
 			end
 		end
-		p "-------" if @Debug
+		p "-------" if @Debug >= 2
 	end
 	return expr.last;
 end
@@ -316,7 +316,7 @@ end
 
 class LR_parser
 	def initialize(type)
-		@Debug = ARGV.member?("debug");
+		@Debug = $DEBUG_project
 
 		TokenTemplate.set_ltype type
 
@@ -332,7 +332,7 @@ class LR_parser
 		@grammar_machina = generate_FSM(@@grammar, [:main, [:expr], 0]);
 		@grammar_machina.set_current(0);
 
-		if @Debug then
+		if @Debug >= 2 then
 			@grammar_machina.vertex_set.each{
 				|x| 
 				print x[0]  
@@ -357,12 +357,25 @@ class LR_parser
 		e = Expression.new(input_string);
 		e.erase_insignificant_tokens! if erase_ins
 		
+
 		expr = e.tokens.clone
 		expr += [Token.new(:eof, :eof, true, 0, 0, 0)]
 		
+		if @Debug > 0
+			print "expr: " 
+			p expr
+		end
+
 		metaexpr = MetaExpression.new();
-		parse(@grammar_machina, expr, @@grammar).make_metaexpr(metaexpr);
 		
+		ast = parse(@grammar_machina, expr, @@grammar);
+
+		#binding.pry if $DEBUG_project > 0
+		ast.print_tree if @Debug > 1
+
+		ast.make_metaexpr(metaexpr);
+	
+
 		return metaexpr;
 	end
 end

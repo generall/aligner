@@ -51,6 +51,7 @@ end
 
 # no indent is observed
 def align_group(input_strings, type)
+	p "start align_group" if $DEBUG_project > 0
 	p = LR_parser.new(type)
 	metas  = []
 	input_strings.each { |str| metas.push(p.parse_meta(str)); }
@@ -60,6 +61,8 @@ def align_group(input_strings, type)
 	for i in 0..metas.size-2 do 
 		pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
 	end
+
+	metas.each{|x| x.print_tree } if $DEBUG_project > 1
 	r = Recreator.new(type)
 	chains = r.generate_chains(pairs_array);
 	lines = r.multiline_reconstruction(metas, chains)
@@ -96,6 +99,7 @@ def align(input_strings, type)
 		end
 	end
 
+	puts "groups.size: #{groups.size}"if $DEBUG_project > 0
 	result = [];
 	groups.each_with_index do |group, i|
 		if group.size > 1 then

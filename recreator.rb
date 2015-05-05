@@ -4,10 +4,27 @@ require "./space_configurator.rb"
 
 class Range
   def intersection(other)
-    return nil if (self.max < other.begin or other.max < self.begin) 
-    [self.begin, other.begin].max..[self.max, other.max].min
+    return (1..0) if (self.last < other.begin or other.last < self.begin) 
+    [self.begin, other.begin].last..[self.last, other.last].min
   end
+
+  def shift_left(indx)
+  	if indx.class == Fixnum then
+  		return (self.begin - indx)..(self.last - indx)
+  	end
+  end
+
+  def shift_right(indx)
+  	if indx.class == Fixnum then
+  		return (self.begin + indx)..(self.last + indx)
+  	end
+  end
+
+
   alias_method :&, :intersection
+  alias_method :+, :shift_right
+  alias_method :-, :shift_left
+
 end
 
 
@@ -23,6 +40,22 @@ class Array
 				end
 			end
 		end
+	end
+end
+
+class Pairs
+	def initialize(arr)	
+		@arr = arr
+	end
+
+	def print(sp = 0)
+		@arr.each do |pair|
+		end
+	end
+end
+
+class Chain
+	def initialize(arr)
 
 	end
 end
@@ -31,7 +64,7 @@ class Recreator
 
 	def initialize(type)
 		@type = type
-		@Debug = true & false;
+		@Debug = $DEBUG_project;
 		@sc = SpaceConf.new(type)
 	end
 
@@ -46,7 +79,7 @@ class Recreator
 		meta.value.each do |token|
 			if token.class == MetaExpression then
 				min_spaces = @sc.get_min(prev_min, token.get_first_token) 
-				if @Debug then
+				if @Debug > 0 then
 					p "from ", prev_min.type
 					p "to", token.get_first_token.type
 					p min_spaces
@@ -57,7 +90,7 @@ class Recreator
 				prev_min = token.get_last_token;
 			else
 				min_spaces = @sc.get_min(prev_min, token)
-				if @Debug then
+				if @Debug > 0 then
 					p "debug:"
 					p "from ", prev_min
 					p "to", token
@@ -92,7 +125,7 @@ class Recreator
 				begin
 				if t_token.class == Token then
 					min_spaces = @sc.get_min(@prev_tokens[line_index], t_token)
-					if @Debug then
+					if @Debug > 0 then
 						p "from ", @prev_tokens[line_index].type
 						p "to", t_token.type
 						p min_spaces
@@ -102,7 +135,7 @@ class Recreator
 					@prev_tokens[line_index]  = t_token;
 				else
 					min_spaces = @sc.get_min(@prev_tokens[line_index], t_token.get_first_token)
-					if @Debug then
+					if @Debug > 0 then
 						p "from ", @prev_tokens[line_index].type
 						p "to", t_token.get_first_token.type
 						p min_spaces
@@ -113,7 +146,7 @@ class Recreator
 				end
 				rescue Exception => e
 					p e
-					p e.backtrace
+					e.backtrace.each{|x| p x}
 					p "Exceprion: "
 					p "line_index: " + line_index.to_s
 					p "token_index: " + indexes[line_index].to_s
@@ -127,6 +160,10 @@ class Recreator
 		end
 		# chain processing
 
+		if @Debug > 0
+			puts "chains"
+			chains.each {|x| p x}
+		end
 		chains.each do |chain|
 
 			begin_line = chain[0];
@@ -176,7 +213,7 @@ class Recreator
 					params.push(t2.str_index);
 					limit =  @sc.get_max(t1, t2, params);
 					accept = delta[i] < limit;
-					if @Debug & false then
+					if @Debug > 1 then
 						p "prev: " + t1.type .to_s;
 						p "next: " + t2.type .to_s;
 						p "delta:" + delta[i].to_s;
@@ -218,8 +255,13 @@ class Recreator
 
 	# input [ [ [index, index], [i, i], ... ], ...]
 	# output [ [line_id, [[token-id, token-id], [t-id, t-id], ...]], .... ]
-
+	# line_id - is first line of chain
 	def generate_chains(pairs_array)
+
+		if @Debug > 0 
+			puts "generate_chains(pairs_array): "
+			pairs_array.each{|x| p x}
+		end
 		n = pairs_array.size();
 		used_indexes = n.times.map{{}};
 		curr_indexes = [  0  ] * n;
@@ -273,28 +315,56 @@ class Recreator
 		end
 
 		# sort
-		chains.bubble_sort! do |x,y|
+
+		chains.sort! do |x,y|
+
 			# TODO add intersection here! Add convertation to line!
-			x_range = x[0]..(x[0] + x[1].size)
-			y_range = y[0]..(y[0] + y[1].size)
+			x_range = x[0]..(x[0] + x[1].size )
+			y_range = y[0]..(y[0] + y[1].size )
 
 
-			str_inter = x_range & y_range;
+			str_inter = x_range & y_range; # intersection of ranges
 
 			x_min = 0;
 			y_min = 0;
 
 			x_by_lines = x[1].map{|i| i[0]} + [x[1].last[1]]
 			y_by_lines = y[1].map{|i| i[0]} + [y[1].last[1]]
-
-			if str_inter != nil
-				x_range = str_inter;
-				y_range = str_inter;
-			end
 			
-			x_range.each{ |i| x_min = [x_min, x_by_lines[i - x[0]]].max }
-			y_range.each{ |i| y_min = [y_min, y_by_lines[i - y[0]]].max }
-			x_min <=> y_min;
+			res = [x_by_lines[str_inter - x[0]].min, -x[0]] <=> [y_by_lines[str_inter - y[0]].min, -y[0]]
+			
+
+			if @Debug > 1
+				p "#{x} < #{y}"  if res == -1
+				p "#{x} > #{y}"  if res == 1
+				p "#{x} = #{y}"  if res == 0
+				p "#{x} ??? #{y}"if res == nil
+	
+				if res == nil
+					p [x_by_lines[str_inter - x[0]].min, x[0]]
+					p [y_by_lines[str_inter - y[0]].min, y[0]]
+					p str_inter
+					p "x_by_lines: #{x_by_lines}"
+					p "y_by_lines: #{y_by_lines}"
+					p "x_range: #{x_range}"
+					p "y_range: #{y_range}"
+					
+				end
+			end
+
+
+			#p "str_inter: ", str_inter 
+
+			#p x_by_lines[str_inter]
+			#p y_by_lines[str_inter]
+			#if str_inter != nil
+			#	x_range = str_inter;
+			#	y_range = str_inter;
+			#end
+			#x_range.each{ |i| x_min = [x_min, x_by_lines[i - x[0]]].max }
+			#y_range.each{ |i| y_min = [y_min, y_by_lines[i - y[0]]].max }
+			#x_min <=> y_min;
+			res
 		end
 
 		return chains;

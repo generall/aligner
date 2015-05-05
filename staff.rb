@@ -1,5 +1,5 @@
 require './heirarchy.rb'
-require 'colorize'  if ARGV.member?("debug")
+require 'colorize'  if $DEBUG_project > 0
 
 
 def levenshtein(first, second)
@@ -125,9 +125,9 @@ class TypeData
 		[/^[\+\-\*\%\/]/                    , :boperator   , true , 0.1, 0, 1],  # binary operator
 		[/^[\{\[\(]/                        , :obracket    , true , 0.1, 0, 1],  # open bracket
 		[/^[\}\]\)]/                        , :cbracket    , true , 0.1, 0, 1],  # close bracket
-		[/^[[:word:]]+/        				, :id          , true , 0.1, 0, 1],  # var_regexp
-		[/^[^\w\s]/            				, :spchar      , true , 0  , 1, 1],  # spchar_regexp
-		[/^\s/                 				, :space       , false, 0  , 0, 1]   # space_regexp
+		[/^[[:word:]]+/                     , :id          , true , 0.1, 0, 1],  # var_regexp
+		[/^[^\w\s]/                         , :spchar      , true , 0  , 1, 1],  # spchar_regexp
+		[/^\s/                              , :space       , false, 0  , 0, 1]   # space_regexp
 	]
 
 	def self.type_by_value(value)
