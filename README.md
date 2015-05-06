@@ -1,4 +1,4 @@
-aligner
+Aligner [![Build Status](https://travis-ci.org/generall/aligner.svg?branch=master)](https://travis-ci.org/generall/aligner)
 =======
 
 Sublime Text plugin for automatic code alignment.
