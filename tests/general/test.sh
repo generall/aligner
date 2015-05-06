@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exit 1
+#exit 1
 
 DIR=$(dirname $0)
 
