@@ -1,4 +1,5 @@
 require 'optparse'
+require "./align.rb"
 
 $DEBUG_project = 0;
 
@@ -7,7 +8,6 @@ OptionParser.new do |opt|
   opt.on('--debug [LEVEL]') { |o| $DEBUG_project = (o || 1).to_i  }
 end.parse!
 
-require "./align.rb"
 
 
 DEBUG_pipe = false

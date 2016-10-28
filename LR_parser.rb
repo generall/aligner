@@ -7,53 +7,53 @@ require 'pry' if $DEBUG_project > 0
 
 class Grammar
 
-	attr_accessor :rules, :rule_settings;
+  attr_accessor :rules, :rule_settings;
 
-	def initialize()
-    	@Debug = true & false;
-		@rules = {}
-		@rule_settings = {};
-	end
+  def initialize()
+    @Debug = true & false;
+    @rules = {}
+    @rule_settings = {};
+  end
 
-	def add_rule(nonterm, product, settings = [])
-		if @rules.has_key?(nonterm) then
-			@rules[nonterm] += [product];
-		else
-			@rules[nonterm]  = [product];
-		end
-		@rule_settings[[nonterm, product]] = settings;
-	end
+  def add_rule(nonterm, product, settings = [])
+    if @rules.has_key?(nonterm) then
+      @rules[nonterm] += [product];
+    else
+      @rules[nonterm]  = [product];
+    end
+    @rule_settings[[nonterm, product]] = settings;
+  end
 
-	#rules: [[non-terminal, [term, term], index], [...]]
-	def closure(rules)
-		j = rules.map{|x| x.clone};
-		all_rules = [];
-		@rules .each{ |x,y| y.each{ |z| all_rules += [[x, z, 0]] }}
-		j      .each{ |  x| all_rules -= [    x    ] }
-		#p all_rules
-		begin
-			is_added = false;
-			j.each do |c_rule|
-				if c_rule[1].size >= c_rule[2] then
-					nonterm_to_add = c_rule[1][c_rule[2]]
-					#p nonterm_to_add
-					if nonterm_to_add.class == Symbol then
-						temp = [];
-						all_rules.each do |rule_to_add|
-							#p rule_to_add
-							if nonterm_to_add == rule_to_add[0] then
-								temp    += [rule_to_add];
-								is_added = true;
-							end
-						end
-						all_rules -= temp;
-						j         += temp;
-					end
-				end
-			end
-		end while is_added
-		return j;
-	end
+  #rules: [[non-terminal, [term, term], index], [...]]
+  def closure(rules)
+    j = rules.map{|x| x.clone};
+    all_rules = [];
+    @rules .each{ |x,y| y.each{ |z| all_rules += [[x, z, 0]] }}
+    j      .each{ |  x| all_rules -= [    x    ] }
+    #p all_rules
+    begin
+      is_added = false;
+      j.each do |c_rule|
+        if c_rule[1].size >= c_rule[2] then
+          nonterm_to_add = c_rule[1][c_rule[2]]
+          #p nonterm_to_add
+          if nonterm_to_add.class == Symbol then
+            temp = [];
+            all_rules.each do |rule_to_add|
+              #p rule_to_add
+              if nonterm_to_add == rule_to_add[0] then
+                temp    += [rule_to_add];
+                is_added = true;
+              end
+            end
+            all_rules -= temp;
+            j         += temp;
+          end
+        end
+      end
+    end while is_added
+    return j;
+  end
 
 	def accepted_signals(rules)
 		cl = closure(rules)
@@ -350,6 +350,7 @@ class LR_parser
 		end
 	end
 
+  # generates meta-expression tree
 	def parse_meta(input_string, erase_ins = true)
 		
 		@grammar_machina.set_current(0);

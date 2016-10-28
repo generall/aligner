@@ -1,5 +1,9 @@
 require './heirarchy.rb'
-require 'colorize'  if $DEBUG_project > 0
+
+
+$DEBUG_project ||= 0
+
+require 'colorize' if $DEBUG_project > 0
 
 
 def levenshtein(first, second)

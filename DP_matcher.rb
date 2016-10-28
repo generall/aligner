@@ -41,26 +41,26 @@ class DPMatcher
 		return max_value;
 	end
 
-	def get_pairs(x,y, start = 0)
-		@cache = {};
-		match(x, y, start, start);
-		pairs = [];
-		i = j = start;
-		curr  = @cache[[i,j]][1]
-		while curr != 3
-			case curr
-			when 0 then
-				pairs += [[i,j]] if x[i].cmp(y[j]) > Float::EPSILON
-				i+=1;
-				j+=1;
-			when 1 then
-				j+=1;	
-			when 2 then
-				i+=1;	
-			end
-			curr = @cache[[i,j]][1]
-		end
-		return [@cache[[start, start]][0], pairs];
+  def get_pairs(x,y, start = 0)
+    @cache = {};
+    match(x, y, start, start);
+    pairs = [];
+    i = j = start;
+    curr  = @cache[[i,j]][1]
+    while curr != 3
+      case curr
+      when 0 then
+        pairs += [[i,j]] if x[i].cmp(y[j]) > Float::EPSILON
+        i+=1;
+        j+=1;
+      when 1 then
+        j+=1;	
+      when 2 then
+        i+=1;	
+      end
+      curr = @cache[[i,j]][1]
+    end
+    return [@cache[[start, start]][0], pairs];
 	end
 
 	def generate_pairs(values1, values2)
@@ -132,4 +132,3 @@ class DPMatcher
 		return s / n[0].to_f;
 	end
 end
-

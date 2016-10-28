@@ -49,26 +49,70 @@ def test_aligment(input_strings, type)
 	return lines
 end
 
-# no indent is observed
+# input
+#   input_strings - lines of source code with same indent
+#   type - syntax type
+#
+#
+# result
+#   aligned lines
+#
+#
 def align_group(input_strings, type)
 	p "start align_group" if $DEBUG_project > 0
 	p = LR_parser.new(type)
-	metas  = []
-	input_strings.each { |str| metas.push(p.parse_meta(str)); }
-	metas.each {|m| m.separate_first!}
+	metas  = [] # tree of meta-expressions
+  # meta expression example for default grammar:
+  # const int a = (1 + 1);
+  #
+  # M[ M[ T(const), T(int), T(a) ], T(=), M[ T('('), M[T(1), T(+), T(1)], T(')') ], T(;) ]
+  #
+  # where
+  #   M = meta expression
+  #   T = Token
+  #
+  #Or in formatted view:
+  #
+  # =
+  #   const int a
+  #   (
+  #     1 + 1
+  #   )
+  #   ;
+  #
+  #
+  #
+	input_strings.each { |str| metas.push(p.parse_meta(str)) }
+	metas.each {|m| m.separate_first!} # do not align first token
 	matcher = DPMatcher.new
-	pairs_array = [];
-	for i in 0..metas.size-2 do 
-		pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value));
-	end
+	pairs_array = [] # matched pairs of tokenks for each sequential pair
+	
+  # pair:
+  #
+  # [<first_meta_idx>, <second_meta_idx>, [optional submatch pair] ]
+
+  for i in 0..metas.size-2 do 
+		pairs_array.push(matcher.generate_pairs(metas[i].value, metas[i+1].value))
+  end
+
 
 	metas.each{|x| x.print_tree } if $DEBUG_project > 1
 	r = Recreator.new(type)
-	chains = r.generate_chains(pairs_array);
-	lines = r.multiline_reconstruction(metas, chains)
+	chains = r.generate_chains(pairs_array) # chain of tokens throw lines to allign
+	lines = r.multiline_reconstruction(metas, chains) # reconstruct aligned lines from tokens and chains
 	return lines
 end
 
+
+
+#
+# input: 
+#   input_strings - array of strngs. Each element is source code line
+#   type - syntax type
+# 
+# function splits input_strings into groups with same initial indent
+#
+#
 def align(input_strings, type)
 	indents = [];
 	for i in 0..input_strings.size-1 do
